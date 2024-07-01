@@ -5,7 +5,7 @@ import requests
 
 ###
 coin = "bitcoin"
-filename = "news.csv"
+filename = "data/coindesk_btc.csv"
 base_url = "https://www.coindesk.com/"
 coin_url = "tag/bitcoin/"
 ###
@@ -96,7 +96,7 @@ for page in range(1,725):
   #     print("\n")
 
   if articles:
-    save_to_csv(articles, f"{coin}_articles.csv")
+    save_to_csv(articles, filename)
 
   
 

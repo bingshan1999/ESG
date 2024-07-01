@@ -13,7 +13,7 @@ client_secret = REDDIT_CLIENT_SECRET
 user_agent = REDDIT_USER_AGENT
 username = REDDIT_USERNAME
 password = REDDIT_PASSWORD
-
+filename = 'data/reddit_btc.csv'
 # Initialize logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -36,7 +36,7 @@ def fetch_posts_for_year(subreddit_name, year):
 
     logging.info(f"Fetching posts from subreddit: {subreddit_name} for the year {year}")
 
-    with open('reddit_posts.csv', 'a', newline='', encoding='utf-8') as csvfile:
+    with open(filename, 'a', newline='', encoding='utf-8') as csvfile:
         fieldnames = ['title', 'score', 'id', 'url', 'num_comments', 'created', 'content']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         if csvfile.tell() == 0:  # If file is empty, write the header

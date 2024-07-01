@@ -5,6 +5,7 @@ from cred import GITHUB_TOKEN
 # Replace with your GitHub token
 token = GITHUB_TOKEN
 repo_name = 'bitcoin/bitcoin'  # Replace with the repository in the format 'owner/repo'
+filename = 'data/github_btc.csv'
 
 # Authenticate to GitHub
 g = Github(token)
@@ -18,7 +19,7 @@ issues = repo.get_issues(state='all')
 print(issues.totalCount)
 
 # Prepare the CSV file
-with open('issues_comments.csv', 'w', newline='', encoding='utf-8') as csvfile:
+with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
     fieldnames = ['issue_number', 'issue_title', 'issue_body_and_comments', 'number_of_comments', 'created_at', 'closed_at', 'labels', 'reactions', 'user']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
@@ -52,4 +53,4 @@ with open('issues_comments.csv', 'w', newline='', encoding='utf-8') as csvfile:
         if count%100==0: print("issue count: ", count)
         writer.writerow(issue_data)
 
-print("Data has been written to issues_comments.csv")
+print("Downloaded Github data")

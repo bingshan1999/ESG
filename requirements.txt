@@ -1,0 +1,44 @@
+beautifulsoup4==4.12.3
+bs4==0.0.2
+certifi==2024.6.2
+cffi==1.16.0
+charset-normalizer==3.3.2
+contourpy @ file:///work/perseverance-python-buildout/croot/contourpy_1701756524386/work
+cryptography==42.0.8
+cycler @ file:///tmp/build/80754af9/cycler_1637851556182/work
+Deprecated==1.2.14
+fonttools @ file:///croot/fonttools_1713551344105/work
+idna==3.7
+kiwisolver @ file:///work/perseverance-python-buildout/croot/kiwisolver_1698847502605/work
+matplotlib @ file:///croot/matplotlib-suite_1713336378214/work
+mkl-fft @ file:///work/perseverance-python-buildout/croot/mkl_fft_1698845673361/work
+mkl-random @ file:///work/perseverance-python-buildout/croot/mkl_random_1698845720894/work
+mkl-service==2.4.0
+networkx @ file:///croot/networkx_1717597493534/work
+numpy @ file:///croot/numpy_and_numpy_base_1708638617955/work/dist/numpy-1.26.4-cp312-cp312-linux_x86_64.whl#sha256=1d700f51d8b4fa684d858c9e3b56b1656bc5c82b6b79ff08d4e3b491c430059f
+packaging @ file:///croot/packaging_1710807400464/work
+pillow @ file:///croot/pillow_1714398848491/work
+ply @ file:///work/perseverance-python-buildout/croot/ply_1698846188635/work
+praw==7.7.1
+prawcore==2.4.0
+pycparser==2.22
+PyGithub==2.3.0
+PyJWT==2.8.0
+PyNaCl==1.5.0
+pyparsing @ file:///work/perseverance-python-buildout/croot/pyparsing_1698847881454/work
+PyQt5==5.15.10
+PyQt5-sip @ file:///work/perseverance-python-buildout/croot/pyqt-split_1698847927472/work/pyqt_sip
+python-dateutil @ file:///croot/python-dateutil_1716495738603/work
+requests==2.32.3
+setuptools==69.5.1
+sip @ file:///work/perseverance-python-buildout/croot/sip_1698846977033/work
+six @ file:///tmp/build/80754af9/six_1644875935023/work
+soupsieve==2.5
+tornado @ file:///work/perseverance-python-buildout/croot/tornado_1698866362018/work
+typing_extensions==4.12.2
+unicodedata2 @ file:///croot/unicodedata2_1713212950228/work
+update-checker==0.18.0
+urllib3==2.2.2
+websocket-client==1.8.0
+wheel==0.43.0
+wrapt==1.16.0

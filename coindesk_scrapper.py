@@ -4,10 +4,11 @@ from bs4 import BeautifulSoup
 import requests
 
 ###
-coin = "bitcoin"
-filename = "data/coindesk_btc.csv"
+coin = "ethereum"
+filename = "data/coindesk_eth.csv"
 base_url = "https://www.coindesk.com/"
-coin_url = "tag/bitcoin/"
+coin_url = "tag/ethereum/"
+max_page = 369
 ###
 
 # Function to fetch and parse a page
@@ -62,7 +63,7 @@ def save_to_csv(articles, filename):
         dict_writer.writerows(articles)
 
 # Loop through paginated pages
-for page in range(1,725):
+for page in range(1,max_page):
   print("page:", page)
   # Scrape articles from the filtered URLs
   articles = []

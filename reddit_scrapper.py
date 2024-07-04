@@ -7,13 +7,20 @@ import requests
 import time 
 import logging
 
+# Define the subreddit and year range
+subreddit_name = 'Ethereum'  # Replace with the subreddit you want to fetch data from
+start_year = 2015
+end_year = 2024
+filename = 'data/reddit_eth.csv'
+
+
 # Replace these values with your own credentials
 client_id = REDDIT_CLIENT_ID
 client_secret = REDDIT_CLIENT_SECRET
 user_agent = REDDIT_USER_AGENT
 username = REDDIT_USERNAME
 password = REDDIT_PASSWORD
-filename = 'data/reddit_btc.csv'
+
 # Initialize logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -44,7 +51,7 @@ def fetch_posts_for_year(subreddit_name, year):
 
         while True:
             try:
-                logging.info("Entering try block to fetch posts.")
+                #logging.info("Entering try block to fetch posts.")
                 for submission in subreddit.top(time_filter='all', limit=None):
                     post_time = datetime.fromtimestamp(submission.created_utc, timezone.utc)
                     if post_time < start_date or post_time >= end_date:
@@ -73,7 +80,7 @@ def fetch_posts_for_year(subreddit_name, year):
                     logging.info(f"Fetched and saved {total_fetched} posts so far")
                     time.sleep(1)  # Respect Reddit’s rate limits
 
-                logging.info("Exiting try block after successfully fetching posts.")
+                #logging.info("Exiting try block after successfully fetching posts.")
                 break  # Exit the loop if fetching completes successfully
 
             except prawcore.exceptions.TooManyRequests as e:
@@ -106,17 +113,13 @@ def get_post_comments(post_id):
 
     return comments
 
-# Define the subreddit and year range
-subreddit_name = 'Bitcoin'  # Replace with the subreddit you want to fetch data from
-start_year = 2015
-end_year = 2024
 
 # Retrieve posts from the specified subreddit year by year
 total_posts = 0
 for year in range(start_year, end_year + 1):
     total_fetched = fetch_posts_for_year(subreddit_name, year)
     total_posts += total_fetched
-    logging.info(f"Total number of posts fetched and saved for {year}: {total_fetched}")
+    logging.info(f"===============Total number of posts fetched and saved for {year}: {total_fetched} ================")
 
 logging.info(f"Total number of posts downloaded and saved: {total_posts}")
-logging.info("Data has been written to reddit_posts.csv")
+logging.info("Downloaded Reddit data")

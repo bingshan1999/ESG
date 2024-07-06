@@ -1,30 +1,10 @@
-import os
 import pandas as pd
-from transformers import pipeline, GPT2Tokenizer
-from datasets import load_dataset, Dataset
 import torch
 from tqdm import tqdm
 import nltk
 nltk.download('punkt')
 from nltk.tokenize import sent_tokenize
-from g4f.client import Client
-
-# Set environment variable for debugging (only enable during debugging phase)
-os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
-
-# Check if a GPU is available
-device = 0 if torch.cuda.is_available() else -1
-
-# Load pre-trained GPT-Neo model and tokenizer using Hugging Face pipeline
-# generator = pipeline('text-generation', model='EleutherAI/gpt-neo-2.7B', device=device)
-# tokenizer = GPT2Tokenizer.from_pretrained('EleutherAI/gpt-neo-2.7B')
-
-# generator = pipeline('text-generation', model='gpt2', device=device)
-# tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-
-# Load pre-trained GPT-Neo 1.3B model and tokenizer using Hugging Face pipeline
-# generator = pipeline('text-generation', model='EleutherAI/gpt-neo-1.3B', device=device)
-# tokenizer = GPT2Tokenizer.from_pretrained('EleutherAI/gpt-neo-1.3B')
+from GPT import GPT
 
 # Define the prompt template
 def create_prompt(text):
@@ -68,48 +48,8 @@ You are an expert in Environmental, Social, and Governance (ESG) topics, specifi
 
 Using these examples, you will evaluate the text provided for its relevance to each ESG aspect. Justify your reasoning for each evaluation.
 """
-# Function to generate ESG-related sentences using GPT-Neo
-# def extract_esg_sentence(sentence, num_sequences=1, max_new_tokens=250):
-#     prompt = prompt_template.format(sentence=sentence)
-#     print("prompt", prompt)
-#     responses = generator(prompt, max_new_tokens=max_new_tokens, num_return_sequences=num_sequences, pad_token_id=generator.tokenizer.eos_token_id)
-#     print("\n")
-#     esg_sentence = responses[0]['generated_text'].replace(prompt, "").strip()  # Remove the prompt from the generated text
-#     print("responses:", esg_sentence)
-#     print("\n\n")
-#     return esg_sentence
 
-client = Client()
-# response = client.chat.completions.create(
-#     model="gpt-3.5-turbo",
-#     messages=[{"role": "user", "content": "Hello"}],
-# )
-#print(response.choices[0].message.content)
-
-def select_most_coherent_response(responses):
-    # Simple heuristic: select the response with the longest, most detailed reasoning
-    selected_aspect = max(responses, key=lambda k: len(responses[k]))
-    return selected_aspect, responses[selected_aspect]
-
-def extract_esg_sentence(sentence, num_sequences=1, max_retries=3, temperature=0.4, top_p=0.4):
-    prompt = create_prompt(sentence)
-    for _ in range(max_retries):
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            temperature=temperature,
-            top_p=top_p,
-            messages=[
-                {"role": "system", "content": system_context},
-                {"role": "user", "content": prompt}
-            ],
-        )
-        esg_sentence = response.choices[0].message.content  # Extract the content from the response
-        
-        if not esg_sentence.lower().startswith("sorry,"):
-            print(f"====================\nprompt: {prompt}\n\nResponse: {esg_sentence}")
-            return esg_sentence
-    
-    return "Failed to get a response after multiple attempts"
+model = GPT('gpt-3.5-turbo', system_context)
 
 # Load your data using pandas
 file_path = 'data/coindesk_btc.csv'
@@ -134,23 +74,10 @@ data = []
 # for sentence in sentences[:10]:
 #     esg_sentence = extract_esg_sentence(sentence)
 #     data.append({'sentence': sentence, 'esg_sentence': esg_sentence})
-esg_sentence = extract_esg_sentence(first_content)
-#data.append({'sentence': sentence, 'esg_sentence': esg_sentence})
-# Create a new DataFrame from the data list
-#df_first_row_sentences = pd.DataFrame(data)
+
+esg_sentence = model.extract_esg_sentence(first_content, verbose=True)
+
 
 # Save the new DataFrame to a CSV file
 # output_file_path = 'data/first_row_sentences_with_esg.csv'
 # df_first_row_sentences.to_csv(output_file_path, index=False)
-
-# Set pandas option to display full text
-#pd.set_option('display.max_colwidth', None)
-
-# Print the new DataFrame
-#print(df_first_row_sentences)
-
-
-
-# Select the most coherent response
-# selected_aspect, best_response = select_most_coherent_response(responses)
-# print(f"Selected Aspect: {selected_aspect}\nBest Response: {best_response}")

@@ -8,3 +8,13 @@ pip install -r requirements.txt
 # Updating env
 pip freeze > requirements.txt
 
+# Credentials for scrapping
+create cred.py in the root directory
+```
+REDDIT_CLIENT_ID = ''
+REDDIT_CLIENT_SECRET = ''
+REDDIT_USER_AGENT = ''
+REDDIT_USERNAME = ''
+REDDIT_PASSWORD = ''
+GITHUB_TOKEN = ''
+```

@@ -5,7 +5,7 @@ import requests
 
 ###
 coin = "ethereum"
-filename = "data/coindesk_eth.csv"
+filename = "../data/coindesk_eth.csv"
 base_url = "https://www.coindesk.com/"
 coin_url = "tag/ethereum/"
 max_page = 369

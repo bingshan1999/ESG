@@ -26,9 +26,33 @@ def create_prompt(text):
     Based on the above evaluations, provide a final assessment of the text's relevance to ESG topics and justify your reasoning.
     """
 
-model = GPT('gpt-3.5-turbo')
+system_context = """
+You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. Here are some examples and reasons for each ESG aspect in this context:
+
+- Environmental (E):
+  - Energy Consumption and Carbon Emissions: Bitcoin mining and other proof-of-work cryptocurrencies consume significant energy, raising concerns about sustainability and environmental impact.
+  - Resource Management: The production and disposal of mining hardware can lead to electronic waste, necessitating proper resource management.
+  - Renewable Energy Usage: Some projects are adopting renewable energy for mining operations to reduce their environmental footprint.
+
+- Social (S):
+  - Labor Practices: Fair labor practices and working conditions for those employed in the crypto industry are essential for social sustainability.
+  - Community Engagement and Inclusion: Active and inclusive community engagement supports the development and adoption of crypto projects.
+  - Diversity and Inclusion: Promoting diversity within teams and communities leads to more innovative and equitable solutions.
+  - Security and User Protection: Prioritizing the security of users and their assets is a significant social responsibility in the crypto space.
+
+- Governance (G):
+  - Decentralized Governance Models: DAOs and other decentralized governance structures must be transparent, fair, and effective.
+  - Business Ethics and Transparency: Ethical practices and clear communication build trust with stakeholders.
+  - Regulatory Compliance: Adhering to AML, KYC, and other regulations is crucial for the legitimacy and sustainability of crypto projects.
+  - Executive Compensation and Incentives: Fair and transparent compensation practices impact decision-making and project priorities.
+
+Using these examples, you will evaluate the text provided for its relevance to each ESG aspect. Justify your reasoning for each evaluation.
+"""
+
+model = GPT('gpt-3.5-turbo', system_context)
+
 # Load your data using pandas
-file_path = 'data/coindesk_btc.csv'
+file_path = '../data/coindesk_btc.csv'
 df = pd.read_csv(file_path)
 
 # Exclude rows with missing values in the 'content' column
@@ -53,22 +77,7 @@ data = []
 
 esg_sentence = model.extract_esg_sentence(first_content, verbose=True)
 
-#data.append({'sentence': sentence, 'esg_sentence': esg_sentence})
-# Create a new DataFrame from the data list
-#df_first_row_sentences = pd.DataFrame(data)
 
 # Save the new DataFrame to a CSV file
 # output_file_path = 'data/first_row_sentences_with_esg.csv'
 # df_first_row_sentences.to_csv(output_file_path, index=False)
-
-# Set pandas option to display full text
-#pd.set_option('display.max_colwidth', None)
-
-# Print the new DataFrame
-#print(df_first_row_sentences)
-
-
-
-# Select the most coherent response
-# selected_aspect, best_response = select_most_coherent_response(responses)
-# print(f"Selected Aspect: {selected_aspect}\nBest Response: {best_response}")

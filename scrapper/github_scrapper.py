@@ -5,7 +5,7 @@ from cred import GITHUB_TOKEN
 # Replace with your GitHub token
 token = GITHUB_TOKEN
 repo_name = 'ethereum/go-ethereum'  # Replace with the repository in the format 'owner/repo'
-filename = 'data/github_eth.csv'
+filename = '../data/github_eth.csv'
 
 # Authenticate to GitHub
 g = Github(token)

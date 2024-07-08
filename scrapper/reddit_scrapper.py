@@ -11,7 +11,7 @@ import logging
 subreddit_name = 'Ethereum'  # Replace with the subreddit you want to fetch data from
 start_year = 2015
 end_year = 2024
-filename = 'data/reddit_eth.csv'
+filename = '../data/reddit_eth.csv'
 
 
 # Replace these values with your own credentials

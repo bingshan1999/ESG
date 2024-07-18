@@ -1,9 +1,16 @@
 import pandas as pd
 import torch
 from tqdm import tqdm
-from GPT import GPT
 import nltk
 from nltk.tokenize import sent_tokenize
+
+import sys
+import os
+
+# Add the parent directory to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from GPT import GPT
 
 #nltk.download('punkt')
 # Define the prompt template
@@ -19,14 +26,14 @@ def create_prompt(text):
     Governance (G) aspects: Decentralized governance models, business ethics and transparency, regulatory compliance, executive compensation and incentives.
 
     
-    Based on the above evaluations, return a JSON object Following these key-value pairs 
+    Based on the above evaluations, return a JSON object Following these key-value pairs and nothing else
     1) 'Environmental': An array containing all sentences related to Environmental aspect 
     2) 'Social': An array containing all sentences related to Social aspect 
     3) 'Governance':  An array containing all sentences related to Governance aspect 
     4) 'Reason': A summarized justification of your evaluation.
     """
 
-model = GPT('gpt-3.5-turbo')
+model = GPT()
 # Load your data using pandas
 file_path = '../data/coindesk_btc.csv'
 df = pd.read_csv(file_path)
@@ -50,8 +57,10 @@ data = []
 # for sentence in sentences[:10]:
 #     esg_sentence = extract_esg_sentence(sentence)
 #     data.append({'sentence': sentence, 'esg_sentence': esg_sentence})
-
 esg_sentence = model.extract_esg_sentence(create_prompt(first_content), verbose=True)
+#for _ in range(0,5):
+#    esg_sentence = model.extract_esg_sentence(create_prompt(first_content), verbose=True, temperature=0)
+
 
 #data.append({'sentence': sentence, 'esg_sentence': esg_sentence})
 # Create a new DataFrame from the data list

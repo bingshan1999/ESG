@@ -32,8 +32,8 @@ df = df.dropna(subset=['issue_body_and_comments'])
 
 # Text Analysis: Distribution of issue lengths
 df['word count'] = df['issue_body_and_comments'].apply(lambda x: len(x.split()))
-#print("\nDistribution of Issue Lengths:")
-#print(df['issue_body_and_comments'].describe())
+print("\nDistribution of Issue Lengths:")
+print(df['word count'].describe())
 
 # Plotting the distribution of issue lengths
 plt.figure(figsize=(10, 6))
@@ -100,8 +100,8 @@ df['polarity'] = df['issue_body_and_comments'].apply(lambda x: TextBlob(x).senti
 df['subjectivity'] = df['issue_body_and_comments'].apply(lambda x: TextBlob(x).sentiment.subjectivity)
 
 # Summary of Sentiment Analysis
-# print("\nSummary of Sentiment Analysis:")
-# print(df[['polarity', 'subjectivity']].describe())
+print("\nSummary of Sentiment Analysis:")
+print(df[['polarity', 'subjectivity']].describe())
 
 # Plotting Sentiment Analysis
 fig, ax = plt.subplots(1, 2, figsize=(14, 6))

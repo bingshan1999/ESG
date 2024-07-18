@@ -33,7 +33,7 @@ df = df.dropna(subset=['content'])
 # Text Analysis: Distribution of post lengths
 df['word count'] = df['content'].apply(lambda x: len(x.split()))
 print("\nDistribution of Post Lengths:")
-print(df['content'].describe())
+print(df['word count'].describe())
 
 # Plotting the distribution of Post lengths
 plt.figure(figsize=(10, 6))
@@ -85,8 +85,10 @@ plt.ylabel('Frequency')
 #plt.show()
 
 
-text = ' '.join(df['content'].tolist())
-wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
+#text = ' '.join(df['content'].tolist())
+text = ' '.join(df['content'].dropna().tolist()).lower()
+filtered_text = ' '.join([word for word in text.split() if word not in stop_words])
+wordcloud = WordCloud(width=800, height=400, background_color='white').generate(filtered_text)
 
 #Plot Word Cloud
 plt.figure(figsize=(10, 5))

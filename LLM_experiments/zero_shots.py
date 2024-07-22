@@ -110,7 +110,7 @@ for index in rows_indices:
 result_df = pd.DataFrame(data)
 
 #Save the DataFrame to a CSV file
-result_df.to_csv("baseline_test.csv", index=False)
+result_df.to_csv("results/zero_shots_test.csv", index=False)
 
 
 

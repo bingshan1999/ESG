@@ -27,3 +27,16 @@ def extract_json_array(output, keyword):
             return []
     else:
         return []
+    
+def lists_to_intersection(*lists):
+    if not lists:
+        return set()
+    
+    # Convert the first list to a set
+    intersection_set = set(lists[0])
+    
+    # Iterate over the remaining lists, updating the intersection set
+    for lst in lists[1:]:
+        intersection_set &= set(lst)
+    
+    return intersection_set

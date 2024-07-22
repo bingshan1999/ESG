@@ -97,7 +97,7 @@ def create_prompt(title, content):
             Governance Aspects:
             """,
         
-        # 5. Most steps (separating aspect and array)
+        # 5. More steps (separating aspect and array)
         f"""
             Article Title: {title}
             Article Context: {content}
@@ -171,7 +171,16 @@ E_arr = utils.extract_json_array(output_text, "Environmental")
 S_arr = utils.extract_json_array(output_text, "Social")
 G_arr = utils.extract_json_array(output_text, "Governance")
 
+output_text = result_df.loc[0, 'ESG Sentences Prompt 6']
+E_arr_2 = utils.extract_json_array(output_text, "Environmental")
+S_arr_2 = utils.extract_json_array(output_text, "Social")
+G_arr_2 = utils.extract_json_array(output_text, "Governance")
+
 print(f'Env arr: {E_arr} \nSocial arr: {S_arr}\nGov arr: {G_arr}')
+print("\n\n")
+print(f'Env arr2: {E_arr_2} \nSocial arr2: {S_arr_2}\nGov arr_2: {G_arr_2}')
+print("\n\n")
+print("intersecting: ", utils.lists_to_intersection(S_arr,S_arr_2))
 # Example: Calculate similarity between ESG Sentences from Prompt 1 and Prompt 2 in the same row
 # for index, row in result_df.iterrows():
 #     esg_sentence_1 = row.get('ESG Sentences Prompt 1', '')
@@ -183,4 +192,4 @@ print(f'Env arr: {E_arr} \nSocial arr: {S_arr}\nGov arr: {G_arr}')
 
 
 #Save the DataFrame to a CSV file
-result_df.to_csv("COT_test.csv", index=False)
+result_df.to_csv("results/COT_test.csv", index=False)

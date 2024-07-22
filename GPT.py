@@ -28,7 +28,7 @@ read_cookie_files(cookies_dir)
 model = Chatgpt4o()
 model.__name__ = "Chatgpt4Online"
 
-print(dir(model))
+#print(dir(model))
 
 
 class GPT:

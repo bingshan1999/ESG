@@ -13,68 +13,104 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from GPT import GPT
 
 #nltk.download('punkt')
-# Define the prompt template
-def create_prompt(text):
-    return f"""
-    Text: {text}
-    
-    Identify any sentences from the text that might involve ESG (Environmental, Social, Governance) topics related to Bitcoin. 
+guidelines = """
+ESG topics in crypto can be related but not limit to:
+- Environmental (E): aspects Energy consumption, resource management, renewable energy usage.
+- Social (S) aspects: Labor practices, community engagement and inclusion, diversity and inclusion, security and user protection.
+- Governance (G) aspects: Decentralized governance models, business ethics and transparency, regulatory compliance, executive compensation and incentives.
+"""
 
-    ESG topics can be related but not limit to:
-    Environmental (E): aspects Energy consumption, resource management, renewable energy usage.
-    Social (S) aspects: Labor practices, community engagement and inclusion, diversity and inclusion, security and user protection.
-    Governance (G) aspects: Decentralized governance models, business ethics and transparency, regulatory compliance, executive compensation and incentives.
+task = """
+Identify any sentences from the article that might involve ESG (Environmental, Social, Governance) topics related to Bitcoin. 
+Return a JSON object Following these key-value pairs and nothing else
+1) 'Environmental': An array containing all sentences related to Environmental aspect 
+2) 'Social': An array containing all sentences related to Social aspect 
+3) 'Governance':  An array containing all sentences related to Governance aspect 
+"""
 
-    
-    Based on the above evaluations, return a JSON object Following these key-value pairs and nothing else
-    1) 'Environmental': An array containing all sentences related to Environmental aspect 
-    2) 'Social': An array containing all sentences related to Social aspect 
-    3) 'Governance':  An array containing all sentences related to Governance aspect 
-    4) 'Reason': A summarized justification of your evaluation.
-    """
+def create_prompt(title, content):
+    return [
+        #1 no guidelines
+        f"""
+            Article Title: {title}
+            Article Context: {content}
+            Task: {task}
+        """,
+
+        #2 normal with guidelines
+        f"""
+            Article Title: {title}
+            Article Context: {content}
+            Task: {task}
+            Guidelines: {guidelines}
+        """,
+
+        #3 put tasks last
+        f"""
+            Article Title: {title}
+            Article Context: {content}
+            Guidelines: {guidelines}
+            Task: {task}
+        """,
+        
+        #4 No title
+        f"""
+            Article: {content}
+            Task: {task}
+            Guidelines: {guidelines}
+        """,
+
+        #5 Task at beginning
+        f"""
+            Task: {task}
+            Article Title: {title}
+            Article Context: {content}
+            Guidelines: {guidelines}
+        """,
+
+        #6 Task and guidelines at the beginning
+        f"""
+            Task: {task}
+            Guidelines: {guidelines}
+            Article Title: {title}
+            Article Context: {content}
+        """
+    ]
 
 model = GPT()
 # Load your data using pandas
-file_path = '../data/coindesk_btc.csv'
+file_path = '../data/cleaned_coindesk_btc.csv'
 df = pd.read_csv(file_path)
 
 # Exclude rows with missing values in the 'content' column
-df_cleaned = df.dropna(subset=['content'])
+# df_cleaned = df.dropna(subset=['content']).drop_duplicates(subset=['title', 'content'])
+# df_cleaned.to_csv('../data/cleaned_coindesk_btc.csv', index=False)
 
-# Limit the dataset to the first 10 rows for testing
-df_cleaned = df_cleaned.head(10)
-
-# Get the first row's content
-first_content = df_cleaned.iloc[0]['content']
-
+rows_indices = [0,20]
 # Split the first row's content into sentences
 #sentences = sent_tokenize(first_content)
 
 # Initialize a list to store the sentences and their corresponding ESG-related sentences
 data = []
 
-# Process each sentence in the first row's content
-# for sentence in sentences[:10]:
-#     esg_sentence = extract_esg_sentence(sentence)
-#     data.append({'sentence': sentence, 'esg_sentence': esg_sentence})
-esg_sentence = model.extract_esg_sentence(create_prompt(first_content), verbose=True)
-#for _ in range(0,5):
-#    esg_sentence = model.extract_esg_sentence(create_prompt(first_content), verbose=True, temperature=0)
+for index in rows_indices:
+    row = df.iloc[index]
+    prompts = create_prompt(row['title'], row['content'])
+    results = {'Title': row['title'], 'URL': row['url']}
+    print(results)
+
+    for i, prompt in enumerate(prompts):
+        esg_sentence = model.extract_esg_sentence(prompt, verbose=False)
+        results[f'ESG Sentences Prompt {i+1}'] = esg_sentence
+    
+    data.append(results)
 
 
-#data.append({'sentence': sentence, 'esg_sentence': esg_sentence})
-# Create a new DataFrame from the data list
-#df_first_row_sentences = pd.DataFrame(data)
+#Create a DataFrame from the data list
+result_df = pd.DataFrame(data)
 
-# Save the new DataFrame to a CSV file
-# output_file_path = 'data/first_row_sentences_with_esg.csv'
-# df_first_row_sentences.to_csv(output_file_path, index=False)
-
-# Set pandas option to display full text
-#pd.set_option('display.max_colwidth', None)
-
-# Print the new DataFrame
-#print(df_first_row_sentences)
+#Save the DataFrame to a CSV file
+result_df.to_csv("baseline_test.csv", index=False)
 
 
 

@@ -81,3 +81,27 @@ esg_sentence = model.extract_esg_sentence(first_content, verbose=True)
 # Save the new DataFrame to a CSV file
 # output_file_path = 'data/first_row_sentences_with_esg.csv'
 # df_first_row_sentences.to_csv(output_file_path, index=False)
+
+
+#######################################
+# NER WITH SPACY
+#import spacy
+
+## Load spaCy's pre-trained NER model
+#nlp = spacy.load("en_core_web_sm")
+# # def extract_entities(text):
+#     doc = nlp(text)
+#     entities = [(ent.text, ent.label_) for ent in doc.ents]
+#     return entities
+
+# def highlight_entities(text, entities):
+#     highlighted_text = text
+#     for entity, label in entities:
+#         highlighted_text = highlighted_text.replace(entity, f"[{label}: {entity}]")
+#     return highlighted_text
+
+# row = df.iloc[0]
+# print("Extracted entities", extract_entities(row['content']))
+
+# print("Highlighted Text:", highlight_entities(row['content'], extract_entities(row['content'])))
+#######################################

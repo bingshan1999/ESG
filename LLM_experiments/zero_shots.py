@@ -77,43 +77,37 @@ def create_prompt(title, content):
         """
     ]
 
-model = GPT()
-# Load your data using pandas
-file_path = '../data/cleaned_coindesk_btc.csv'
-df = pd.read_csv(file_path)
+def main():
+    model = GPT()
+    # Load your data using pandas
+    file_path = '../data/cleaned_coindesk_btc.csv'
+    df = pd.read_csv(file_path)
 
-# Exclude rows with missing values in the 'content' column
-# df_cleaned = df.dropna(subset=['content']).drop_duplicates(subset=['title', 'content'])
-# df_cleaned.to_csv('../data/cleaned_coindesk_btc.csv', index=False)
+    rows_indices = [0,20]
+    # Split the first row's content into sentences
+    #sentences = sent_tokenize(first_content)
 
-rows_indices = [0,20]
-# Split the first row's content into sentences
-#sentences = sent_tokenize(first_content)
+    # Initialize a list to store the sentences and their corresponding ESG-related sentences
+    data = []
 
-# Initialize a list to store the sentences and their corresponding ESG-related sentences
-data = []
+    for index in rows_indices:
+        row = df.iloc[index]
+        prompts = create_prompt(row['title'], row['content'])
+        results = {'Title': row['title'], 'URL': row['url']}
+        print(results)
 
-for index in rows_indices:
-    row = df.iloc[index]
-    prompts = create_prompt(row['title'], row['content'])
-    results = {'Title': row['title'], 'URL': row['url']}
-    print(results)
-
-    for i, prompt in enumerate(prompts):
-        esg_sentence = model.extract_esg_sentence(prompt, verbose=False)
-        results[f'ESG Sentences Prompt {i+1}'] = esg_sentence
-    
-    data.append(results)
+        for i, prompt in enumerate(prompts):
+            esg_sentence = model.extract_esg_sentence(prompt, verbose=False)
+            results[f'ESG Sentences Prompt {i+1}'] = esg_sentence
+        
+        data.append(results)
 
 
-#Create a DataFrame from the data list
-result_df = pd.DataFrame(data)
+    #Create a DataFrame from the data list
+    result_df = pd.DataFrame(data)
 
-#Save the DataFrame to a CSV file
-result_df.to_csv("results/zero_shots_test.csv", index=False)
+    #Save the DataFrame to a CSV file
+    result_df.to_csv("results/zero_shots_test.csv", index=False)
 
-
-
-# Select the most coherent response
-# selected_aspect, best_response = select_most_coherent_response(responses)
-# print(f"Selected Aspect: {selected_aspect}\nBest Response: {best_response}")
+if __name__ == '__main__':
+    main()

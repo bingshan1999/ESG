@@ -49,40 +49,39 @@ You are an expert in Environmental, Social, and Governance (ESG) topics, specifi
 Using these examples, you will evaluate the text provided for its relevance to each ESG aspect. Justify your reasoning for each evaluation.
 """
 
-model = GPT('gpt-3.5-turbo', system_context)
+def main():
+  model = GPT(system_context=system_context)
 
-# Load your data using pandas
-file_path = '../data/coindesk_btc.csv'
-df = pd.read_csv(file_path)
+  # Load your data using pandas
+  file_path = '../data/cleaned_coindesk_btc.csv'
+  df = pd.read_csv(file_path)
 
-# Exclude rows with missing values in the 'content' column
-df_cleaned = df.dropna(subset=['content'])
+  rows_indices = [0,20]
 
-# Limit the dataset to the first 10 rows for testing
-df_cleaned = df_cleaned.head(10)
+  # Initialize a list to store the sentences and their corresponding ESG-related sentences
+  data = []
 
-# Get the first row's content
-first_content = df_cleaned.iloc[0]['content']
+  for index in rows_indices:
+      row = df.iloc[index]
+      prompts = create_prompt(row['title'], row['content'])
+      results = {'Title': row['title'], 'URL': row['url']}
+      print(results)
 
-# Split the first row's content into sentences
-#sentences = sent_tokenize(first_content)
-
-# Initialize a list to store the sentences and their corresponding ESG-related sentences
-data = []
-
-# Process each sentence in the first row's content
-# for sentence in sentences[:10]:
-#     esg_sentence = extract_esg_sentence(sentence)
-#     data.append({'sentence': sentence, 'esg_sentence': esg_sentence})
-
-esg_sentence = model.extract_esg_sentence(first_content, verbose=True)
+      for i, prompt in enumerate(prompts):
+          esg_sentence = model.extract_esg_sentence(prompt, verbose=False)
+          results[f'ESG Sentences Prompt {i+1}'] = esg_sentence
+      
+      data.append(results)
 
 
-# Save the new DataFrame to a CSV file
-# output_file_path = 'data/first_row_sentences_with_esg.csv'
-# df_first_row_sentences.to_csv(output_file_path, index=False)
+  #Create a DataFrame from the data list
+  result_df = pd.DataFrame(data)
 
+  #Save the DataFrame to a CSV file
+  result_df.to_csv("results/zero_shots_test.csv", index=False)
 
+if __name__ == '__main__':
+    main()
 #######################################
 # NER WITH SPACY
 #import spacy

@@ -137,9 +137,19 @@ def generate_initial_responses(model, prompt, num_agents):
 def critique_responses(model, prompt, initial_responses):
     critiques = []
     for i in range(len(initial_responses)):
-        combined_responses = initial_responses[:i] + initial_responses[i+1:]
-        combined_text = " ".join(combined_responses)
-        critique_prompt = f"{prompt}\n\nPrevious Responses from Other Agents:\n{combined_text}\n\nCritique the above responses."
+        # The next agent's response in a circular manner
+        next_agent_response = initial_responses[(i + 1) % len(initial_responses)]  
+        critique_prompt = f"""
+                            {prompt}
+                            
+                            Previous Responses from Other Agents: 
+                            {next_agent_response}
+                            
+                            Critique the above responses by addressing the following points:
+                            1. Identify any factual errors.
+                            2. Point out logical inconsistencies.
+                            3. Suggest areas of improvement.
+                            """
         critique = model.extract_esg_sentence(critique_prompt, temperature=0.7, verbose=False)
         critiques.append(critique)
     return critiques
@@ -147,9 +157,23 @@ def critique_responses(model, prompt, initial_responses):
 def refine_responses(model, prompt, initial_responses, critiques):
     refined_responses = []
     for i in range(len(initial_responses)):
-        combined_responses = initial_responses[:i] + initial_responses[i+1:]
-        critique_text = critiques[i]
-        refinement_prompt = f"{prompt}\n\nPrevious Responses from Other Agents:\n{' '.join(combined_responses)}\n\nCritiques of Your Previous Response:\n{critique_text}\n\nBased on the critiques and feedback provided, refine your response."
+        previous_response = initial_responses[i]
+        critique_text = critiques[(i - 1) % len(initial_responses)]
+        refinement_prompt = f"""
+                            {prompt}
+
+                            Your Previous Response:
+                            {previous_response}
+
+                            Critiques of Your Previous Response:
+                            {critique_text}
+
+                            Based on the critiques and feedback provided, refine your response by:
+                            1. Correcting any factual errors identified.
+                            2. Addressing logical inconsistencies.
+                            3. Incorporating any additional information provided by other agents.
+                            4. Strengthening your arguments and reasoning.
+                            """
         refined_response = model.extract_esg_sentence(refinement_prompt, temperature=0.7, verbose=False)
         refined_responses.append(refined_response)
     return refined_responses

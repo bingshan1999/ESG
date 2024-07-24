@@ -140,56 +140,60 @@ def create_prompt(title, content):
         """
     ]
 
-model = GPT()
-# Load your data using pandas
-file_path = '../data/cleaned_coindesk_btc.csv'
-df = pd.read_csv(file_path)
+def main():
+    model = GPT()
+    # Load your data using pandas
+    file_path = '../data/cleaned_coindesk_btc.csv'
+    df = pd.read_csv(file_path)
 
-rows_indices = [0,20]
+    rows_indices = [0,20]
 
-# Initialize a list to store the sentences and their corresponding ESG-related sentences
-data = []
+    # Initialize a list to store the sentences and their corresponding ESG-related sentences
+    data = []
 
-for index in rows_indices:
-    row = df.iloc[index]
-    prompts = create_prompt(row['title'], row['content'])
-    results = {'Title': row['title'], 'URL': row['url']}
-    print(results)
-    
-    for i, prompt in enumerate(prompts):
-        esg_sentence = model.extract_esg_sentence(prompt, verbose=False)
-        results[f'ESG Sentences Prompt {i+1}'] = esg_sentence
-    
-    data.append(results)
-
-
-#Create a DataFrame from the data list
-result_df = pd.DataFrame(data)
-
-output_text = result_df.loc[0, 'ESG Sentences Prompt 5']
-E_arr = utils.extract_json_array(output_text, "Environmental")
-S_arr = utils.extract_json_array(output_text, "Social")
-G_arr = utils.extract_json_array(output_text, "Governance")
-
-output_text = result_df.loc[0, 'ESG Sentences Prompt 6']
-E_arr_2 = utils.extract_json_array(output_text, "Environmental")
-S_arr_2 = utils.extract_json_array(output_text, "Social")
-G_arr_2 = utils.extract_json_array(output_text, "Governance")
-
-print(f'Env arr: {E_arr} \nSocial arr: {S_arr}\nGov arr: {G_arr}')
-print("\n\n")
-print(f'Env arr2: {E_arr_2} \nSocial arr2: {S_arr_2}\nGov arr_2: {G_arr_2}')
-print("\n\n")
-print("intersecting: ", utils.lists_to_intersection(S_arr,S_arr_2))
-# Example: Calculate similarity between ESG Sentences from Prompt 1 and Prompt 2 in the same row
-# for index, row in result_df.iterrows():
-#     esg_sentence_1 = row.get('ESG Sentences Prompt 1', '')
-#     esg_sentence_2 = row.get('ESG Sentences Prompt 2', '')
-    
-#     if esg_sentence_1 and esg_sentence_2:
-#         similarity = utils.calculate_similarity(esg_sentence_1, esg_sentence_2)
-#         result_df.at[index, 'Similarity Prompt 1 and 2'] = similarity
+    for index in rows_indices:
+        row = df.iloc[index]
+        prompts = create_prompt(row['title'], row['content'])
+        results = {'Title': row['title'], 'URL': row['url']}
+        print(results)
+        
+        for i, prompt in enumerate(prompts):
+            esg_sentence = model.extract_esg_sentence(prompt, verbose=False)
+            results[f'ESG Sentences Prompt {i+1}'] = esg_sentence
+        
+        data.append(results)
 
 
-#Save the DataFrame to a CSV file
-result_df.to_csv("results/COT_test.csv", index=False)
+    #Create a DataFrame from the data list
+    result_df = pd.DataFrame(data)
+
+    output_text = result_df.loc[0, 'ESG Sentences Prompt 5']
+    E_arr = utils.extract_json_array(output_text, "Environmental")
+    S_arr = utils.extract_json_array(output_text, "Social")
+    G_arr = utils.extract_json_array(output_text, "Governance")
+
+    output_text = result_df.loc[0, 'ESG Sentences Prompt 6']
+    E_arr_2 = utils.extract_json_array(output_text, "Environmental")
+    S_arr_2 = utils.extract_json_array(output_text, "Social")
+    G_arr_2 = utils.extract_json_array(output_text, "Governance")
+
+    print(f'Env arr: {E_arr} \nSocial arr: {S_arr}\nGov arr: {G_arr}')
+    print("\n\n")
+    print(f'Env arr2: {E_arr_2} \nSocial arr2: {S_arr_2}\nGov arr_2: {G_arr_2}')
+    print("\n\n")
+    print("intersecting: ", utils.lists_to_intersection(S_arr,S_arr_2))
+    # Example: Calculate similarity between ESG Sentences from Prompt 1 and Prompt 2 in the same row
+    # for index, row in result_df.iterrows():
+    #     esg_sentence_1 = row.get('ESG Sentences Prompt 1', '')
+    #     esg_sentence_2 = row.get('ESG Sentences Prompt 2', '')
+        
+    #     if esg_sentence_1 and esg_sentence_2:
+    #         similarity = utils.calculate_similarity(esg_sentence_1, esg_sentence_2)
+    #         result_df.at[index, 'Similarity Prompt 1 and 2'] = similarity
+
+
+    #Save the DataFrame to a CSV file
+    result_df.to_csv("results/COT_test.csv", index=False)
+
+if __name__ == '__main__':
+    main()

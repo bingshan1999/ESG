@@ -4,31 +4,60 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from wordcloud import WordCloud
 from textblob import TextBlob
+import re
 
-# Load your data
-df = pd.read_csv('../data/coindesk_btc.csv')
+def clean_article(text):
+    # Define keywords to identify unwanted sections
+    keywords = [
+        "CoinDesk", "privacy policy", "terms of use", "do not sell my personal information",
+        "award-winning media outlet", "Bullish group", "editorial policies", "regulatory compliance"
+    ]
+    
+    # Split the text into sentences
+    sentences = re.split(r'(?<=[.!?]) +', text)
+    
+    # Function to check if any keyword is in the sentence
+    def contains_keyword(sentence):
+        return any(keyword.lower() in sentence.lower() for keyword in keywords)
 
-# Check data types and missing values
-print(df.info())
+    # Iterate from the end and find the position to start keeping sentences
+    keep_index = len(sentences)
+    lookahead = 2  # Number of sentences to look ahead
+    
+    for i in range(len(sentences) - 1, -1, -1):
+        if contains_keyword(sentences[i]):
+            # Check lookahead sentences
+            lookahead_detected = False
+            for j in range(1, lookahead + 1):
+                if i - j >= 0 and contains_keyword(sentences[i - j]):
+                    lookahead_detected = True
+                    break
+            
+            if not lookahead_detected:
+                keep_index = i
+                break
+    
+    # Keep sentences from the start to the identified position
+    cleaned_text = ' '.join(sentences[:keep_index])
+    return cleaned_text
 
-# Summary statistics
-#print(df.describe())
-#print(df.head())
 
-# Data Cleaning: Check for duplicates
-print("\nDuplicate Rows:")
-print(df.duplicated().sum())
+# Load your data using pandas
+file_path = '../data/coindesk_btc.csv'
+df = pd.read_csv(file_path)
 
-# Data Cleaning: Check for missing values and handle them
-print("\nMissing Values:")
-print(df['content'].isnull().sum())
-
-# Identify rows with missing values in the specified columns
-rows_with_missing_values = df[df['content'].isnull()]
-print("\nRows with Missing Values in 'content' Column:")
-print(rows_with_missing_values)
-
+# Drop rows with missing content
 df = df.dropna(subset=['content'])
+
+# Remove duplicates
+df = df.drop_duplicates(subset=['content'])
+
+# Apply the clean_article function to the 'content' column
+df['content'] = df['content'].apply(clean_article)
+
+# Save the cleaned DataFrame to a new CSV file
+df.to_csv("../data/cleaned_coindesk_btc.csv", index=False)
+
 
 # Text Analysis: Distribution of article lengths
 df['word count'] = df['content'].apply(lambda x: len(x.split()))

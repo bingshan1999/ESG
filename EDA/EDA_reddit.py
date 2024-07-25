@@ -15,20 +15,12 @@ df = pd.read_csv('../data/reddit_btc.csv')
 # Check data types and missing values
 print(df.info())
 
-# Data Cleaning: Check for duplicates
-print("\nDuplicate Rows:")
-print(df.duplicated().sum())
-
-# Data Cleaning: Check for missing values and handle them
-print("\nMissing Values:")
-print(df['content'].isnull().sum())
-
-# Identify rows with missing values in the specified columns
-# rows_with_missing_values = df[df['content'].isnull()]
-# print("\nRows with Missing Values in 'content' Column:")
-# print(rows_with_missing_values)
-
 df = df.dropna(subset=['content'])
+# Remove duplicates
+df = df.drop_duplicates(subset=['content'])
+
+# Save the cleaned DataFrame to a new CSV file
+#df.to_csv("../data/cleaned_reddit_btc.csv", index=False)
 
 # Text Analysis: Distribution of post lengths
 df['word count'] = df['content'].apply(lambda x: len(x.split()))

@@ -12,23 +12,12 @@ nltk.download('stopwords')
 # Load your data
 df = pd.read_csv('../data/github_btc.csv')
 
-# Check data types and missing values
-print(df.info())
-
-# Data Cleaning: Check for duplicates
-print("\nDuplicate Rows:")
-print(df.duplicated().sum())
-
-# Data Cleaning: Check for missing values and handle them
-print("\nMissing Values:")
-print(df['issue_body_and_comments'].isnull().sum())
-
-# Identify rows with missing values in the specified columns
-# rows_with_missing_values = df[df['issue_body_and_comments'].isnull()]
-# print("\nRows with Missing Values in 'content' Column:")
-# print(rows_with_missing_values)
-
 df = df.dropna(subset=['issue_body_and_comments'])
+# Remove duplicates
+df = df.drop_duplicates(subset=['issue_number'])
+# Save the cleaned DataFrame to a new CSV file
+#df.to_csv("../data/cleaned_github_btc.csv", index=False)
+
 
 # Text Analysis: Distribution of issue lengths
 df['word count'] = df['issue_body_and_comments'].apply(lambda x: len(x.split()))

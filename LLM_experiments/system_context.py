@@ -2,29 +2,59 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 import nltk
-nltk.download('punkt')
+#nltk.download('punkt')
 from nltk.tokenize import sent_tokenize
+import sys
+import os
+
+# Add the parent directory to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from GPT import GPT
 
+guidelines = """
+ESG topics in crypto can be related but not limit to:
+- Environmental (E): aspects Energy consumption, resource management, renewable energy usage.
+- Social (S) aspects: Labor practices, community engagement and inclusion, diversity and inclusion, security and user protection.
+- Governance (G) aspects: Decentralized governance models, business ethics and transparency, regulatory compliance, executive compensation and incentives.
+"""
+
+task = """
+Identify any sentences from the article that might involve ESG (Environmental, Social, Governance) topics related to Bitcoin. 
+Return a JSON object Following these key-value pairs and nothing else
+1) 'Environmental': An array containing all sentences related to Environmental aspect 
+2) 'Social': An array containing all sentences related to Social aspect 
+3) 'Governance':  An array containing all sentences related to Governance aspect 
+"""
+
 # Define the prompt template
-def create_prompt(text):
-    return f"""
-    Text: {text}
-    
-    First, consider the following Environmental (E) aspects: Energy consumption, resource management, renewable energy usage.
-    Question: Is the text provided above related to Environmental (E) topics? Justify your reasoning:
-    Answer the question in the following format: [YES/NO].[REASON]
-    
-    Next, consider the following Social (S) aspects: Labor practices, community engagement and inclusion, diversity and inclusion, security and user protection.
-    Question: Is the text provided above related to Social (S) topics? Justify your reasoning:
-    Answer the question in the following format: [YES/NO].[REASON]
-    
-    Finally, consider the following Governance (G) aspects: Decentralized governance models, business ethics and transparency, regulatory compliance, executive compensation and incentives.
-    Question: Is the text provided above related to Governance (G) topics? Justify your reasoning:
-    Answer the question in the following format: [YES/NO].[REASON]
-    
-    Based on the above evaluations, provide a final assessment of the text's relevance to ESG topics and justify your reasoning.
-    """
+def create_prompt(title, content):
+    return [
+        f"""
+            Article Title: {title}
+            Article Context: {content}
+
+            Step 1: Identify and explain any Environmental (E) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array..
+            Environmental Aspects:
+            Environmental Array:
+
+            Step 2: Identify and explain any Social (S) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array.
+            Social Aspects:
+            Social Array:
+
+            Step 3: Identify and explain any Governance (G) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array.
+            Governance Aspects:
+            Governance Array:
+        """,
+
+        #2 normal with guidelines
+        f"""
+            Article Title: {title}
+            Article Context: {content}
+            Task: {task}
+            Guidelines: {guidelines}
+        """]
+
 
 system_context = """
 You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. Here are some examples and reasons for each ESG aspect in this context:
@@ -78,7 +108,7 @@ def main():
   result_df = pd.DataFrame(data)
 
   #Save the DataFrame to a CSV file
-  result_df.to_csv("results/zero_shots_test.csv", index=False)
+  result_df.to_csv("results/system_context_test2.csv", index=False)
 
 if __name__ == '__main__':
     main()

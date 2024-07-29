@@ -1,150 +1,95 @@
 Title,URL,ESG Sentences Prompt 1,ESG Sentences Prompt 2
-"On Bitcoin White Paper's 15th Anniversary, Wall Street Threatens to Swallow Its One-Time Challenger",https://www.coindesk.com/business/2023/10/31/on-bitcoin-white-papers-15th-anniversary-wall-street-threatens-to-swallow-its-one-time-challenger/,"Sure, let's break down the article in terms of Environmental (E), Social (S), and Governance (G) aspects.
-
-### Step 1: Identify and explain any Environmental (E) aspects mentioned in the context.
-
-**Environmental Aspects:**
-The article does not explicitly mention any environmental aspects such as energy consumption, carbon emissions, resource management, or renewable energy usage related to Bitcoin or other cryptocurrencies.
-
-**Environmental Array:**
-```json
-[]
-```
-
-### Step 2: Identify and explain any Social (S) aspects mentioned in the context.
-
-**Social Aspects:**
-1. **Community Engagement and Inclusion:** The article discusses the initial adoption of Bitcoin by idealists who embraced the idea of decentralization and cutting out middlemen in finance. This reflects community engagement and inclusion in the early stages of Bitcoin's development.
-2. **Security and User Protection:** The article mentions the hacking of a giant crypto exchange, highlighting the importance of security and user protection in the crypto space.
-
-**Social Array:**
-```json
-[
-    ""Bitcoin got switched on, BTC started getting mined and stuff started happening – small stuff at first. Pizzas were purchased. A website morphed from a place to swap Magic: The Gathering cards to a giant crypto exchange – and then got massively hacked."",
-    ""Idealists who embraced the idea of decentralization and cutting out middlemen in finance harnessed Satoshi's ideas, made them real and extended them.""
-]
-```
-
-### Step 3: Identify and explain any Governance (G) aspects mentioned in the context.
-
-**Governance Aspects:**
-1. **Decentralized Governance Models:** The article touches on the decentralized nature of Bitcoin and other cryptocurrencies, which aligns with decentralized governance models.
-2. **Regulatory Compliance:** The article discusses the involvement of regulators and the potential approval of Bitcoin ETFs, indicating the importance of regulatory compliance.
-3. **Business Ethics and Transparency:** The article mentions the actions of the U.S. Securities and Exchange Commission and banking agencies, which are related to ethical practices and transparency in the crypto space.
-
-**Governance Array:**
-```json
-[
-    ""Satoshi Nakamoto's paper didn't explicitly say: The world needs a peer-to-peer system to move money around to replace Wall Street giants because they can't be trusted, they're falling apart, etc. But that was the vibe as folks picked up on the idea and made the Bitcoin blockchain and bitcoin (BTC) the cryptocurrency real."",
-    ""Wall Street and the rest of TradFi started paying attention – trying to move conventional financial operations onto blockchains and trading 'digital assets,' their genteel term for cryptocurrencies."",
-    ""These titans of finance are increasingly driving a space that, to many, was designed to put them out of business."",
-    ""The degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies.""
-]
-```
-
-I hope this breakdown helps! If you have any more questions or need further assistance, feel free to ask.","```json
+"On Bitcoin White Paper's 15th Anniversary, Wall Street Threatens to Swallow Its One-Time Challenger",https://www.coindesk.com/business/2023/10/31/on-bitcoin-white-papers-15th-anniversary-wall-street-threatens-to-swallow-its-one-time-challenger/,"```json
 {
   ""Environmental"": [],
   ""Social"": [
-    ""Satoshi Nakamoto's paper didn't explicitly say: The world needs a peer-to-peer system to move money around to replace Wall Street giants because they can't be trusted, they're falling apart, etc."",
-    ""Bitcoin got switched on, BTC started getting mined and stuff started happening – small stuff at first."",
-    ""Pizzas were purchased."",
-    ""A website morphed from a place to swap Magic: The Gathering cards to a giant crypto exchange – and then got massively hacked."",
-    ""Other cryptocurrencies debuted, expanding what blockchains could do."",
-    ""Crypto prices soared – like, really soared – as idealists who embraced the idea of decentralization and cutting out middlemen in finance harnessed Satoshi's ideas, made them real and extended them."",
-    ""More than a few charlatans got involved as well."",
-    ""Wall Street and the rest of TradFi started paying attention – trying to move conventional financial operations onto blockchains and trading \""digital assets,\"" their genteel term for cryptocurrencies."",
-    ""Today, we find ourselves at an ironic moment."",
-    ""These titans of finance are increasingly driving a space that, to many, was designed to put them out of business."",
-    ""Take, for instance, the story of the moment (excluding Sam Bankman-Fried's ongoing criminal fraud trial)."",
-    ""Giddiness over BlackRock (the biggest asset manager in the world) and some of its peers trying to list bitcoin ETFs in the U.S. pushed up bitcoin's price last week, a bet that these easy-to-trade products will bring a flood of investment into BTC."",
-    ""BlackRock and other ETF providers look poised to be – assuming regulators permit these products, and there are reasons to think they'll have to – the new bitcoin whales."",
-    ""CME Group, owner of the Chicago Mercantile Exchange, is close to overtaking Binance as the largest crypto derivatives exchange in the world."",
-    ""CME's product is a cash-settled futures contract, essentially a side bet on bitcoin's price; no BTC changes hands."",
-    ""In other words, a business with roots in the 19th century and agricultural commodities like corn and pork bellies, and one of the key spots in all of traditional finance, is a major player in crypto trading."",
-    ""Finance people are increasingly taking over the story – at least to the mainstream – around bitcoin, to an extent that is noteworthy."",
-    ""What does TradFi muscling its way to the front of the pack mean for crypto?"",
-    ""Bitcoin is not all of crypto – though its market capitalization as a percentage of the whole crypto market is at an unusually high level above 50%."",
-    ""There are the myriad blockchains like Ethereum and its associated layer-2 networks such as Polygon that run smart contracts – software designed to power various financial and other applications – and that have their own tradable tokens."",
-    ""That's a whole largely decentralized realm (in aspiration, if not always in practice) that, even to some in TradFi, represents a way to replace conventional ways of doing finance with blockchain-powered versions."",
-    ""That fits broadly with Satoshi's peer-to-peer vision, even if some of the folks that have adopted this mindset collect Wall Street-sized paychecks."",
-    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies."",
-    ""Crypto will still have its crypto-y moments, like last week when the price of a totally normal token called HarryPotterObamaSonic10Inu zoomed higher."",
-    ""\""We have proposed a system for electronic transactions without relying on trust,\"" Satoshi wrote 15 years ago."",
-    ""After Sam Bankman-Fried, Do Kwon and Alex Mashinsky showed what can happen when you trust crypto natives, are users prepared to trust different crypto shepherds?"",
-    ""Or will they finally ditch the shepherds, as Satoshi might have hoped?""
+    ""After Sam Bankman-Fried, Do Kwon and Alex Mashinsky showed what can happen when you trust crypto natives, are users prepared to trust different crypto shepherds?""
   ],
   ""Governance"": [
-    ""Satoshi Nakamoto's paper didn't explicitly say: The world needs a peer-to-peer system to move money around to replace Wall Street giants because they can't be trusted, they're falling apart, etc."",
-    ""Bitcoin got switched on, BTC started getting mined and stuff started happening – small stuff at first."",
-    ""Pizzas were purchased."",
-    ""A website morphed from a place to swap Magic: The Gathering cards to a giant crypto exchange – and then got massively hacked."",
-    ""Other cryptocurrencies debuted, expanding what blockchains could do."",
-    ""Crypto prices soared – like, really soared – as idealists who embraced the idea of decentralization and cutting out middlemen in finance harnessed Satoshi's ideas, made them real and extended them."",
-    ""More than a few charlatans got involved as well."",
-    ""Wall Street and the rest of TradFi started paying attention – trying to move conventional financial operations onto blockchains and trading \""digital assets,\"" their genteel term for cryptocurrencies."",
-    ""Today, we find ourselves at an ironic moment."",
-    ""These titans of finance are increasingly driving a space that, to many, was designed to put them out of business."",
-    ""Take, for instance, the story of the moment (excluding Sam Bankman-Fried's ongoing criminal fraud trial)."",
-    ""Giddiness over BlackRock (the biggest asset manager in the world) and some of its peers trying to list bitcoin ETFs in the U.S. pushed up bitcoin's price last week, a bet that these easy-to-trade products will bring a flood of investment into BTC."",
-    ""BlackRock and other ETF providers look poised to be – assuming regulators permit these products, and there are reasons to think they'll have to – the new bitcoin whales."",
-    ""CME Group, owner of the Chicago Mercantile Exchange, is close to overtaking Binance as the largest crypto derivatives exchange in the world."",
-    ""CME's product is a cash-settled futures contract, essentially a side bet on bitcoin's price; no BTC changes hands."",
-    ""In other words, a business with roots in the 19th century and agricultural commodities like corn and pork bellies, and one of the key spots in all of traditional finance, is a major player in crypto trading."",
-    ""Finance people are increasingly taking over the story – at least to the mainstream – around bitcoin, to an extent that is noteworthy."",
-    ""What does TradFi muscling its way to the front of the pack mean for crypto?"",
-    ""Bitcoin is not all of crypto – though its market capitalization as a percentage of the whole crypto market is at an unusually high level above 50%."",
-    ""There are the myriad blockchains like Ethereum and its associated layer-2 networks such as Polygon that run smart contracts – software designed to power various financial and other applications – and that have their own tradable tokens."",
-    ""That's a whole largely decentralized realm (in aspiration, if not always in practice) that, even to some in TradFi, represents a way to replace conventional ways of doing finance with blockchain-powered versions."",
-    ""That fits broadly with Satoshi's peer-to"
-"First Mover Americas: BTC Steadies, but 10% Monthly Loss Questions Nasdaq Rally",https://www.coindesk.com/markets/2024/06/25/first-mover-americas-btc-steadies-but-10-monthly-loss-questions-nasdaq-rally/,"Sure, let's break down the article and identify the relevant ESG aspects.
+    ""That said, this is less about how much of the total BTC stash that Wall Street holds."",
+    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies.""
+  ]
+}
+```","Sure! Let’s break down the article based on the Environmental, Social, and Governance (ESG) aspects.
 
-### Step 1: Identify and explain any Environmental (E) aspects mentioned in the context.
-
+### Step 1: Identify and explain any Environmental (E) aspects mentioned in the article.
 **Environmental Aspects:**
-The article does not explicitly mention any environmental aspects related to energy consumption, carbon emissions, resource management, or renewable energy usage in the context of cryptocurrency.
+The article does not explicitly mention any environmental aspects related to cryptocurrency, such as energy consumption, carbon emissions, or electronic waste production. However, the broader context of Bitcoin and its mining process often raises concerns about energy usage and environmental impact, which could be inferred but are not directly addressed in this specific article.
 
+### Step 2: Extract the original sentences from the article that relate to the Environmental Aspects.
 **Environmental Array:**
 ```json
 []
 ```
 
-### Step 2: Identify and explain any Social (S) aspects mentioned in the context.
-
+### Step 3: Identify and explain any Social (S) aspects mentioned in the article.
 **Social Aspects:**
-The article does not directly address social aspects such as labor practices, community engagement, diversity and inclusion, or security and user protection within the cryptocurrency space.
+1. **Market Instability:** The article discusses the volatility of cryptocurrency prices and how they can soar dramatically, indicating market instability.
+2. **Security and User Protection:** The mention of a crypto exchange being massively hacked highlights concerns about security and user protection in the cryptocurrency space.
+3. **Illicit Activities:** The reference to past events involving figures like Sam Bankman-Fried suggests concerns about trust and potential illicit activities within the crypto community.
 
+### Step 4: Extract the original sentences from the article that relate to the Social Aspects.
 **Social Array:**
 ```json
-[]
-```
-
-### Step 3: Identify and explain any Governance (G) aspects mentioned in the context.
-
-**Governance Aspects:**
-1. **Regulatory Compliance:** The article mentions the approval of regulatory filings by the SEC for spot ether ETFs, which is a governance aspect related to regulatory compliance.
-2. **Business Ethics and Transparency:** The disclosure about CoinDesk's acquisition by the Bullish group and the potential conflict of interest due to employees receiving options in the Bullish group touches on business ethics and transparency.
-
-**Governance Array:**
-```json
 [
-    ""Spot ether ETFs are close to becoming available to investors in the U.S. after the Securities and Exchange Commission (SEC) approved key regulatory filings from issuers last month."",
-    ""In November 2023, CoinDesk was acquired by the Bullish group, owner of Bullish, a regulated, digital assets exchange. The Bullish group is majority-owned by Block.one; both companies have interests in a variety of blockchain and digital asset businesses and significant holdings of digital assets, including bitcoin. CoinDesk operates as an independent subsidiary with an editorial committee to protect journalistic independence. CoinDesk employees, including journalists, may receive options in the Bullish group as part of their compensation.""
+    ""Other cryptocurrencies debuted, expanding what blockchains could do."",
+    ""Crypto prices soared – like, really soared – as idealists who embraced the idea of decentralization and cutting out middlemen in finance harnessed Satoshi's ideas, made them real and extended them."",
+    ""a website morphed from a place to swap Magic: The Gathering cards to a giant crypto exchange – and then got massively hacked."",
+    ""After Sam Bankman-Fried, Do Kwon and Alex Mashinsky showed what can happen when you trust crypto natives, are users prepared to trust different crypto shepherds?""
 ]
 ```
 
-### Summary
-- **Environmental (E):** No relevant aspects mentioned.
-- **Social (S):** No relevant aspects mentioned.
-- **Governance (G):** The article touches on regulatory compliance and business ethics and transparency.
+### Step 5: Identify and explain any Governance (G) aspects mentioned in the article.
+**Governance Aspects:**
+1. **Regulatory Compliance:** The article discusses the involvement of traditional finance (TradFi) and the potential for regulatory scrutiny, particularly from the U.S. Securities and Exchange Commission.
+2. **Decentralized Governance Models:** The article touches on the aspiration of decentralization in the crypto space, contrasting it with the increasing influence of traditional financial institutions.
+3. **Business Ethics and Transparency:** The mention of trust issues following high-profile fraud cases raises questions about ethics and transparency in the cryptocurrency sector.
 
-If you have any more questions or need further analysis, feel free to ask!","```json
+### Step 6: Extract the original sentences from the article that relate to the Governance Aspects.
+**Governance Array:**
+```json
+[
+    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies."",
+    ""That fits broadly with Satoshi's peer-to-peer vision, even if some of the folks that have adopted this mindset collect Wall Street-sized paychecks.""
+]
+```
+
+If you have any more questions or need further assistance, feel free to ask!"
+"First Mover Americas: BTC Steadies, but 10% Monthly Loss Questions Nasdaq Rally",https://www.coindesk.com/markets/2024/06/25/first-mover-americas-btc-steadies-but-10-monthly-loss-questions-nasdaq-rally/,"```json
 {
   ""Environmental"": [],
-  ""Social"": [],
+  ""Social"": [
+    ""Traders on the decentralized predictions platform Polymarket have already chosen a winner in the 2024 U.S. Presidential Elections, and it\'s not incumbent Joe Biden."",
+    ""Trump’s favorable stance on crypto means BTC and the wider market could emerge as a bet on Trump’s presidency in the lead up to the Nov. 4 election.""
+  ],
   ""Governance"": [
     ""The impending U.S.-based spot ether ETFs could see less demand than their already live BTC peers, broker Bernstein said in a report Monday, echoing recent comments by investment banking giant JPMorgan."",
     ""Spot ether ETFs are close to becoming available to investors in the U.S. after the Securities and Exchange Commission (SEC) approved key regulatory filings from issuers last month.""
   ]
 }
-```"
+```","Sure! Let's break down the article based on the ESG aspects.
+
+### Step 1: Identify and explain any Environmental (E) aspects mentioned in the article.
+**Environmental Aspects:** The article does not explicitly mention any environmental issues related to energy consumption, carbon emissions, resource management, renewable energy usage, or electronic waste production. It primarily focuses on market movements and trading dynamics.
+
+### Step 2: Based on Step 1, extract the original sentences from the article that relate to the Environmental Aspects.
+**Environmental Array:** []
+(No relevant sentences found.)
+
+### Step 3: Identify and explain any Social (S) aspects mentioned in the article.
+**Social Aspects:** The article touches on the social implications of cryptocurrency trading, particularly in relation to market instability and the influence of major financial institutions. The mention of decentralized predictions platforms like Polymarket indicates community engagement and the accessibility of information regarding political events.
+
+### Step 4: Based on Step 3, extract the original sentences from the article that relate to the Social Aspects.
+**Social Array:**
+1. ""Traders on the decentralized predictions platform Polymarket have already chosen a winner in the 2024 U.S. Presidential Elections, and it’s not incumbent Joe Biden.""
+2. ""A Polymarket contract asking who would win the election showed Republican candidate Donald Trump as the clear favorite, with a 57% chance of winning versus 35% for Biden.""
+
+### Step 5: Identify and explain any Governance (G) aspects mentioned in the article.
+**Governance Aspects:** The article discusses regulatory compliance, particularly regarding the approval of spot ether ETFs by the SEC. This highlights the governance framework surrounding cryptocurrency investments and the influence of regulatory bodies on market dynamics.
+
+### Step 6: Based on Step 5, extract the original sentences from the article that relate to the Governance Aspects.
+**Governance Array:**
+1. ""The impending U.S.-based spot ether ETFs could see less demand than their already live BTC peers, broker Bernstein said in a report Monday, echoing recent comments by investment banking giant JPMorgan.""
+2. ""Spot ether ETFs are close to becoming available to investors in the U.S. after the Securities and Exchange Commission (SEC) approved key regulatory filings from issuers last month.""
+
+If you have any more questions or need further assistance, feel free to ask!"

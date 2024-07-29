@@ -13,14 +13,14 @@ file_path = '../data/cleaned_coindesk_btc.csv'
 df = pd.read_csv(file_path)
 
 # Specify the row indices you want to subset
-rows_indices = [0, 20]
+rows_indices = range(0, 21)
 
 # Create a subset of the DataFrame using the specified row indices
 subset_df = df.iloc[rows_indices].copy()
 
 # Initialize the ESG classifier pipeline with device parameter
-#esg_classifier = pipeline("text-classification", model="nbroad/ESG-BERT", device=device)
-esg_classifier = pipeline("text-classification", model="yiyanghkust/finbert-esg", device=device)
+esg_classifier = pipeline("text-classification", model="nbroad/ESG-BERT", device=device)
+#esg_classifier = pipeline("text-classification", model="yiyanghkust/finbert-esg", device=device)
 
 # Function to classify each sentence in an article
 def classify_sentences(article_text):
@@ -38,7 +38,7 @@ detailed_data = []
 for index, row in subset_df.iterrows():
     sentences, classifications = classify_sentences(row['content'])
     for sentence, classification in zip(sentences, classifications):
-        if classification[0]['score'] > 0:  # Keep only classifications with score > 0.9
+        if classification[0]['score'] > 0.85 :  # and classification[0]['label'] != 'None'
             detailed_data.append({
                 'Title': row['title'],
                 'URL': row['url'],
@@ -52,7 +52,7 @@ for index, row in subset_df.iterrows():
 detailed_df = pd.DataFrame(detailed_data)
 
 # Save the detailed DataFrame to a CSV file
-detailed_df.to_csv('results/finbert_esg_test.csv', index=False)
+detailed_df.to_csv('results/ESG_BERT_highscores.csv', index=False)
 
 # Print the detailed DataFrame
 print(detailed_df)

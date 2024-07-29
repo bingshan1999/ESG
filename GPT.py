@@ -21,9 +21,9 @@ from g4f.cookies import set_cookies_dir, read_cookie_files
 import g4f.debug
 g4f.debug.logging = True
 
-cookies_dir = os.path.join(os.path.dirname(__file__), "har_and_cookies")
-set_cookies_dir(cookies_dir)
-read_cookie_files(cookies_dir)
+# cookies_dir = os.path.join(os.path.dirname(__file__), "har_and_cookies")
+# set_cookies_dir(cookies_dir)
+# read_cookie_files(cookies_dir)
 
 model = Chatgpt4o()
 model.__name__ = "Chatgpt4Online"
@@ -43,29 +43,34 @@ class GPT:
     top_p: nucleus sampling. Work with temperature to randomly choose cumulative probability of p% of words.
     '''
     def extract_esg_sentence(self, prompt, max_retries=3, temperature=0, top_p=0.4, verbose=False):
+        #print(f'temperature: {temperature}')
         messages = []
         if self.system_context:
             messages.append({"role": "system", "content": self.system_context})
     
         messages.append({"role": "user", "content": prompt})
-    
+        
         for _ in range(max_retries):
-            response = self.client.chat.completions.create(
-                model=self.model_name,
-                temperature=temperature,
-                top_p=top_p,
-                provider=self.provider,
-                messages=messages
-            )
-            esg_sentence = response.choices[0].message.content  # Extract the content from the response
-            
-            if not esg_sentence.lower().startswith("sorry,"):
-                if verbose:
-                    print(f"====================\nprompt: {prompt}\n\nResponse: {esg_sentence}")                                    
-                    # with open('output.txt', 'w') as file:
-                    #     print("writing to file")
-                    #     file.write(esg_sentence)
+            try:
+                response = self.client.chat.completions.create(
+                    model=self.model_name,
+                    temperature=temperature,
+                    top_p=top_p,
+                    provider=self.provider,
+                    messages=messages
+                )
+                esg_sentence = response.choices[0].message.content  # Extract the content from the response
+                
+                if not esg_sentence.lower().startswith("sorry,"):
+                    if verbose:
+                        print(f"====================\nprompt: {prompt}\n\nResponse: {esg_sentence}")                                    
+                        # with open('output.txt', 'w') as file:
+                        #     print("writing to file")
+                        #     file.write(esg_sentence)
 
-                return esg_sentence
+                    return esg_sentence
+            
+            except Exception as e:
+                print(f"GPT failed with error: {e}")
         
         return "Failed to get a response after multiple attempts"

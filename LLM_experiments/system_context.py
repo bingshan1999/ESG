@@ -29,54 +29,49 @@ Return a JSON object Following these key-value pairs and nothing else
 
 # Define the prompt template
 def create_prompt(title, content):
-    return [
+    return [f"""
+          Article Title: {title}
+          Article Context: {content}
+          
+          Identify any sentences from the article that might involve ESG (Environmental, Social, Governance) topics related to Bitcoin. 
+          Return a JSON object Following these key-value pairs and nothing else
+          1) 'Environmental': An array containing all sentences related to Environmental aspect 
+          2) 'Social': An array containing all sentences related to Social aspect 
+          3) 'Governance':  An array containing all sentences related to Governance aspect 
+        """,
         f"""
             Article Title: {title}
             Article Context: {content}
 
-            Step 1: Identify and explain any Environmental (E) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array..
+            Step 1: Identify and explain any Environmental (E) aspects mentioned in the article.
             Environmental Aspects:
+
+            Step 2: Based on Step 1, extract the original sentences from the article that relates to the Environmental Aspects. Return the sentences in an array.
             Environmental Array:
 
-            Step 2: Identify and explain any Social (S) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array.
+            Step 3: Identify and explain any Social (S) aspects mentioned in the article. 
             Social Aspects:
+
+            Step 4: Based on Step 3, extract the original sentences from the article that relates to the Social Aspects. Return the sentences in an array.
             Social Array:
-
-            Step 3: Identify and explain any Governance (G) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array.
+            
+            Step 5: Identify and explain any Governance (G) aspects mentioned in the article.
             Governance Aspects:
-            Governance Array:
-        """,
 
-        #2 normal with guidelines
-        f"""
-            Article Title: {title}
-            Article Context: {content}
-            Task: {task}
-            Guidelines: {guidelines}
+            Step 6: Based on Step 5, extract the original sentences from the article that relates to the Governance Aspects. Return the sentences in an array.
+            Governance Array:
         """]
 
 
 system_context = """
-You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. Here are some examples and reasons for each ESG aspect in this context:
+You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
+Given an article, you will be asked to extract ESG issues from it. 
+Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
 
-- Environmental (E):
-  - Energy Consumption and Carbon Emissions: Bitcoin mining and other proof-of-work cryptocurrencies consume significant energy, raising concerns about sustainability and environmental impact.
-  - Resource Management: The production and disposal of mining hardware can lead to electronic waste, necessitating proper resource management.
-  - Renewable Energy Usage: Some projects are adopting renewable energy for mining operations to reduce their environmental footprint.
+- Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production.
+- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection, Entry Barrier and Accessibility, Market Instability, Illicit Activities, Influence of major financial institutions
+- Governance (G): Decentralized Governance Models (off-chain and on-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
 
-- Social (S):
-  - Labor Practices: Fair labor practices and working conditions for those employed in the crypto industry are essential for social sustainability.
-  - Community Engagement and Inclusion: Active and inclusive community engagement supports the development and adoption of crypto projects.
-  - Diversity and Inclusion: Promoting diversity within teams and communities leads to more innovative and equitable solutions.
-  - Security and User Protection: Prioritizing the security of users and their assets is a significant social responsibility in the crypto space.
-
-- Governance (G):
-  - Decentralized Governance Models: DAOs and other decentralized governance structures must be transparent, fair, and effective.
-  - Business Ethics and Transparency: Ethical practices and clear communication build trust with stakeholders.
-  - Regulatory Compliance: Adhering to AML, KYC, and other regulations is crucial for the legitimacy and sustainability of crypto projects.
-  - Executive Compensation and Incentives: Fair and transparent compensation practices impact decision-making and project priorities.
-
-Using these examples, you will evaluate the text provided for its relevance to each ESG aspect. Justify your reasoning for each evaluation.
 """
 
 def main():
@@ -108,7 +103,7 @@ def main():
   result_df = pd.DataFrame(data)
 
   #Save the DataFrame to a CSV file
-  result_df.to_csv("results/system_context_test2.csv", index=False)
+  result_df.to_csv("results/system_context_test.csv", index=False)
 
 if __name__ == '__main__':
     main()

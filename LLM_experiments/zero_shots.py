@@ -11,6 +11,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from GPT import GPT
+import utils
 
 #nltk.download('punkt')
 guidelines = """
@@ -89,7 +90,10 @@ def main():
 
     # Initialize a list to store the sentences and their corresponding ESG-related sentences
     data = []
-
+    
+    # Consider running average to reduce memory usage
+    all_embeddings = {'Environmental': [], 'Social': [], 'Governance': []}
+    
     for index in rows_indices:
         row = df.iloc[index]
         prompts = create_prompt(row['title'], row['content'])
@@ -100,14 +104,35 @@ def main():
             esg_sentence = model.extract_esg_sentence(prompt, verbose=False)
             results[f'ESG Sentences Prompt {i+1}'] = esg_sentence
         
-        data.append(results)
+        esg_sentence = results['ESG Sentences Prompt 6']
 
+        environmental_sentences, social_sentences, governance_sentences = utils.parse_esg_json(esg_sentence)
+
+        if environmental_sentences:
+            results['Environmental Cosine Similarity'] = utils.calculate_pairwise_cosine_similarity_str(environmental_sentences)
+            all_embeddings['Environmental'].extend(utils.encode_arr(environmental_sentences))
+
+        if social_sentences:
+            results['Social Cosine Similarity'] = utils.calculate_pairwise_cosine_similarity_str(social_sentences)
+            all_embeddings['Social'].extend(utils.encode_arr(social_sentences))
+
+        if governance_sentences:
+            results['Governance Cosine Similarity'] = utils.calculate_pairwise_cosine_similarity_str(governance_sentences)
+            all_embeddings['Governance'].extend(utils.encode_arr(governance_sentences))
+
+        data.append(results)
 
     #Create a DataFrame from the data list
     result_df = pd.DataFrame(data)
 
     #Save the DataFrame to a CSV file
     result_df.to_csv("results/zero_shots_test.csv", index=False)
+
+    print(f"""
+            Overall Environmental Cosine similarity {utils.calculate_pairwise_cosine_similarity_embedding(all_embeddings['Environmental'])}
+            Overall Social Cosine similarity {utils.calculate_pairwise_cosine_similarity_embedding(all_embeddings['Social'])}
+            Overall Government Cosine similarity {utils.calculate_pairwise_cosine_similarity_embedding(all_embeddings['Governance'])}
+        """)
 
 if __name__ == '__main__':
     main()

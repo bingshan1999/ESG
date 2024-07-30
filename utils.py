@@ -7,13 +7,46 @@ import re
 # Load pre-trained sentence transformer model
 model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
+def encode_arr(sentences_arr):
+    """
+    Encode the entire array into vector embeddings
+
+    Parameters:
+    sentences_arr: List of strings
+
+    Returns:
+    embeddings
+    """
+    combined_sentences = [' '.join(sent) for sent in sentences_arr]
+    return model.encode(combined_sentences, convert_to_tensor=True)
+
 def calculate_similarity(text1, text2):
     embedding1 = model.encode(text1, convert_to_tensor=True)
     embedding2 = model.encode(text2, convert_to_tensor=True)
     similarity = util.pytorch_cos_sim(embedding1, embedding2)
     return similarity.item()
 
-def calculate_pairwise_cosine_similarity(responses):
+def calculate_pairwise_cosine_similarity_embedding(responses):
+    """
+    Calculate the mean of pairwise cosine similarities among embeddings.
+
+    When there are more than two agents, this function computes the pairwise 
+    cosine similarity between all pairs of responses and returns the mean similarity.
+
+    Parameters:
+    responses: List of embeddings
+
+    Returns:
+    float: The mean of pairwise cosine similarities.
+    """
+    similarities = []
+    for i in range(len(responses)):
+        for j in range(i + 1, len(responses)):
+            similarity =  util.pytorch_cos_sim(responses[i], responses[j]).item()
+            similarities.append(similarity)
+    return np.mean(similarities) if similarities else 0
+
+def calculate_pairwise_cosine_similarity_str(responses):
     """
     Calculate the mean of pairwise cosine similarities among responses.
 
@@ -31,7 +64,7 @@ def calculate_pairwise_cosine_similarity(responses):
         for j in range(i + 1, len(responses)):
             similarity = calculate_similarity(responses[i], responses[j])
             similarities.append(similarity)
-    return np.mean(similarities)
+    return np.mean(similarities) if similarities else 0
 
 def extract_json_array(output, keyword):
     """
@@ -85,3 +118,28 @@ def lists_to_intersection(*lists):
         intersection_set &= set(lst)
     
     return intersection_set
+
+def parse_esg_json(json_data):
+    """
+    Parse the ESG JSON data and return the Environmental, Social, and Governance arrays.
+
+    Parameters:
+    json_data (str): A JSON string containing the ESG data, potentially surrounded by ```json and ```.
+
+    Returns:
+    tuple: A tuple containing three lists - Environmental, Social, and Governance arrays.
+    """
+    # Strip the ```json and ``` surrounding the actual JSON content
+    if json_data.startswith("```json"):
+        json_data = json_data[7:]
+    if json_data.endswith("```"):
+        json_data = json_data[:-3]
+    
+    # Load the JSON data
+    data = json.loads(json_data)
+    
+    environmental_array = data.get("Environmental", [])
+    social_array = data.get("Social", [])
+    governance_array = data.get("Governance", [])
+    
+    return environmental_array, social_array, governance_array

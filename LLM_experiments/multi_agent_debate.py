@@ -36,7 +36,7 @@ def calculate_combined_similarity(responses, keyword):
     combined_sentences = [' '.join(sent) for sent in sentences]
 
     # Calculate pairwise cosine similarities using embeddings
-    avg_cosine_similarity = utils.calculate_pairwise_cosine_similarity(combined_sentences)
+    avg_cosine_similarity = utils.calculate_pairwise_cosine_similarity_str(combined_sentences)
     
     # Calculate intersection
     intersection_set = set(sentences[0])

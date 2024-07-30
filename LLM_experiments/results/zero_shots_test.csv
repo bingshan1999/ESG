@@ -1,66 +1,25 @@
-Title,URL,ESG Sentences Prompt 1,ESG Sentences Prompt 2,ESG Sentences Prompt 3,ESG Sentences Prompt 4,ESG Sentences Prompt 5,ESG Sentences Prompt 6
+Title,URL,ESG Sentences Prompt 1,ESG Sentences Prompt 2,ESG Sentences Prompt 3,ESG Sentences Prompt 4,ESG Sentences Prompt 5,ESG Sentences Prompt 6,Social Cosine Similarity,Governance Cosine Similarity
 "On Bitcoin White Paper's 15th Anniversary, Wall Street Threatens to Swallow Its One-Time Challenger",https://www.coindesk.com/business/2023/10/31/on-bitcoin-white-papers-15th-anniversary-wall-street-threatens-to-swallow-its-one-time-challenger/,"```json
 {
   ""Environmental"": [],
-  ""Social"": [
-    ""Satoshi Nakamoto's paper didn't explicitly say: The world needs a peer-to-peer system to move money around to replace Wall Street giants because they can't be trusted, they're falling apart, etc."",
-    ""But that was the vibe as folks picked up on the idea and made the Bitcoin blockchain and bitcoin (BTC) the cryptocurrency real."",
-    ""Bitcoin got switched on, BTC started getting mined and stuff started happening – small stuff at first."",
-    ""Pizzas were purchased."",
-    ""A website morphed from a place to swap Magic: The Gathering cards to a giant crypto exchange – and then got massively hacked."",
-    ""Other cryptocurrencies debuted, expanding what blockchains could do."",
-    ""Crypto prices soared – like, really soared – as idealists who embraced the idea of decentralization and cutting out middlemen in finance harnessed Satoshi's ideas, made them real and extended them."",
-    ""(More than a few charlatans got involved as well.)"",
-    ""Wall Street and the rest of TradFi started paying attention – trying to move conventional financial operations onto blockchains and trading \""digital assets,\"" their genteel term for cryptocurrencies."",
-    ""Today, we find ourselves at an ironic moment."",
-    ""These titans of finance are increasingly driving a space that, to many, was designed to put them out of business."",
-    ""Take, for instance, the story of the moment (excluding Sam Bankman-Fried's ongoing criminal fraud trial)."",
-    ""Giddiness over BlackRock (the biggest asset manager in the world) and some of its peers trying to list bitcoin ETFs in the U.S. pushed up bitcoin's price last week, a bet that these easy-to-trade products will bring a flood of investment into BTC."",
-    ""BlackRock and other ETF providers look poised to be – assuming regulators permit these products, and there are reasons to think they'll have to – the new bitcoin whales."",
-    ""In other words, a business with roots in the 19th century and agricultural commodities like corn and pork bellies, and one of the key spots in all of traditional finance, is a major player in crypto trading."",
-    ""That said, this is less about how much of the total BTC stash that Wall Street holds."",
-    ""Finance people are increasingly taking over the story – at least to the mainstream – around bitcoin, to an extent that is noteworthy."",
-    ""What does TradFi muscling its way to the front of the pack mean for crypto?"",
-    ""First, an asterisk: Bitcoin ETFs and crypto derivatives trading (much of it involving BTC) don't mean finance bros are swallowing all of crypto."",
-    ""Bitcoin is not all of crypto – though its market capitalization as a percentage of the whole crypto market is at an unusually high level above 50%."",
-    ""There are the myriad blockchains like Ethereum and its associated layer-2 networks such as Polygon that run smart contracts – software designed to power various financial and other applications – and that have their own tradable tokens."",
-    ""That's a whole largely decentralized realm (in aspiration, if not always in practice) that, even to some in TradFi, represents a way to replace conventional ways of doing finance with blockchain-powered versions."",
-    ""That fits broadly with Satoshi's peer-to-peer vision, even if some of the folks that have adopted this mindset collect Wall Street-sized paychecks."",
-    ""Which brings us back to the irony."",
-    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies."",
-    ""Crypto will still have its crypto-y moments, like last week when the price of a totally normal token called HarryPotterObamaSonic10Inu zoomed higher."",
-    ""\""We have proposed a system for electronic transactions without relying on trust,\"" Satoshi wrote 15 years ago."",
-    ""After Sam Bankman-Fried, Do Kwon and Alex Mashinsky showed what can happen when you trust crypto natives, are users prepared to trust different crypto shepherds?"",
-    ""Or will they finally ditch the shepherds, as Satoshi might have hoped?""
-  ],
+  ""Social"": [],
   ""Governance"": [
-    ""Satoshi Nakamoto's paper didn't explicitly say: The world needs a peer-to-peer system to move money around to replace Wall Street giants because they can't be trusted, they're falling apart, etc."",
-    ""But that was the vibe as folks picked up on the idea and made the Bitcoin blockchain and bitcoin (BTC) the cryptocurrency real."",
-    ""Bitcoin got switched on, BTC started getting mined and stuff started happening – small stuff at first."",
-    ""Pizzas were purchased."",
-    ""A website morphed from a place to swap Magic: The Gathering cards to a giant crypto exchange – and then got massively hacked."",
-    ""Other cryptocurrencies debuted, expanding what blockchains could do."",
-    ""Crypto prices soared – like, really soared – as idealists who embraced the idea of decentralization and cutting out middlemen in finance harnessed Satoshi's ideas, made them real and extended them."",
-    ""(More than a few charlatans got involved as well.)"",
-    ""Wall Street and the rest of TradFi started paying attention – trying to move conventional financial operations onto blockchains and trading \""digital assets,\"" their genteel term for cryptocurrencies."",
-    ""Today, we find ourselves at an ironic moment."",
-    ""These titans of finance are increasingly driving a space that, to many, was designed to put them out of business."",
-    ""Take, for instance, the story of the moment (excluding Sam Bankman-Fried's ongoing criminal fraud trial)."",
-    ""Giddiness over BlackRock (the biggest asset manager in the world) and some of its peers trying to list bitcoin ETFs in the U.S. pushed up bitcoin's price last week, a bet that these easy-to-trade products will bring a flood of investment into BTC."",
-    ""BlackRock and other ETF providers look poised to be – assuming regulators permit these products, and there are reasons to think they'll have to – the new bitcoin whales."",
-    ""In other words, a business with roots in the 19th century and agricultural commodities like corn and pork bellies, and one of the key spots in all of traditional finance, is a major player in crypto trading."",
     ""That said, this is less about how much of the total BTC stash that Wall Street holds."",
-    ""Finance people are increasingly taking over the story – at least to the mainstream – around bitcoin, to an extent that is noteworthy."",
-    ""What does TradFi muscling its way to the front of the pack mean for crypto?"",
-    ""First, an asterisk: Bitcoin ETFs and crypto derivatives trading (much of it involving BTC) don't mean finance bros are swallowing all of crypto."",
-    ""Bitcoin is not all of crypto – though its market capitalization as a percentage of the whole crypto market is at an unusually high level above 50%."",
-    ""There are the myriad blockchains like Ethereum and its associated layer-2 networks such as Polygon that run smart contracts – software designed to power various financial and other applications – and that have their own tradable tokens."",
-   ","```json
+    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies.""
+  ]
+}
+```","```json
+{
+  ""Environmental"": [],
+  ""Social"": [],
+  ""Governance"": [
+    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies.""
+  ]
+}
+```","```json
 {
   ""Environmental"": [],
   ""Social"": [
-    ""Crypto will still have its crypto-y moments, like last week when the price of a totally normal token called HarryPotterObamaSonic10Inu zoomed higher."",
-    ""\""We have proposed a system for electronic transactions without relying on trust,\"" Satoshi wrote 15 years ago."",
     ""After Sam Bankman-Fried, Do Kwon and Alex Mashinsky showed what can happen when you trust crypto natives, are users prepared to trust different crypto shepherds?""
   ],
   ""Governance"": [
@@ -70,100 +29,32 @@ Title,URL,ESG Sentences Prompt 1,ESG Sentences Prompt 2,ESG Sentences Prompt 3,E
 ```","```json
 {
   ""Environmental"": [],
-  ""Social"": [
-    ""Crypto will still have its crypto-y moments, like last week when the price of a totally normal token called HarryPotterObamaSonic10Inu zoomed higher.""
-  ],
+  ""Social"": [],
   ""Governance"": [
-    ""Which brings us back to the irony."",
-    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies."",
-    ""\""We have proposed a system for electronic transactions without relying on trust,\"" Satoshi wrote 15 years ago."",
-    ""After Sam Bankman-Fried, Do Kwon and Alex Mashinsky showed what can happen when you trust crypto natives, are users prepared to trust different crypto shepherds?"",
-    ""Or will they finally ditch the shepherds, as Satoshi might have hoped?""
+    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies.""
+  ]
+}
+```","```json
+{
+  ""Environmental"": [],
+  ""Social"": [],
+  ""Governance"": [
+    ""That said, this is less about how much of the total BTC stash that Wall Street holds."",
+    ""What does TradFi muscling its way to the front of the pack mean for crypto?"",
+    ""the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies.""
   ]
 }
 ```","```json
 {
   ""Environmental"": [],
   ""Social"": [
-    ""Satoshi Nakamoto's paper didn't explicitly say: The world needs a peer-to-peer system to move money around to replace Wall Street giants because they can't be trusted, they're falling apart, etc."",
-    ""Bitcoin got switched on, BTC started getting mined and stuff started happening – small stuff at first."",
-    ""Pizzas were purchased."",
-    ""A website morphed from a place to swap Magic: The Gathering cards to a giant crypto exchange – and then got massively hacked."",
-    ""Other cryptocurrencies debuted, expanding what blockchains could do."",
-    ""Crypto prices soared – like, really soared – as idealists who embraced the idea of decentralization and cutting out middlemen in finance harnessed Satoshi's ideas, made them real and extended them."",
-    ""(More than a few charlatans got involved as well.)"",
-    ""Wall Street and the rest of TradFi started paying attention – trying to move conventional financial operations onto blockchains and trading \""digital assets,\"" their genteel term for cryptocurrencies."",
-    ""Today, we find ourselves at an ironic moment."",
-    ""These titans of finance are increasingly driving a space that, to many, was designed to put them out of business."",
-    ""Take, for instance, the story of the moment (excluding Sam Bankman-Fried's ongoing criminal fraud trial)."",
-    ""Giddiness over BlackRock (the biggest asset manager in the world) and some of its peers trying to list bitcoin ETFs in the U.S. pushed up bitcoin's price last week, a bet that these easy-to-trade products will bring a flood of investment into BTC."",
-    ""BlackRock and other ETF providers look poised to be – assuming regulators permit these products, and there are reasons to think they'll have to – the new bitcoin whales."",
-    ""Also, CME Group, owner of the Chicago Mercantile Exchange, is close to overtaking Binance as the largest crypto derivatives exchange in the world."",
-    ""(CME's product is a cash-settled futures contract, essentially a side bet on bitcoin's price; no BTC changes hands)."",
-    ""In other words, a business with roots in the 19th century and agricultural commodities like corn and pork bellies, and one of the key spots in all of traditional finance, is a major player in crypto trading."",
-    ""That said, this is less about how much of the total BTC stash that Wall Street holds."",
-    ""Finance people are increasingly taking over the story – at least to the mainstream – around bitcoin, to an extent that is noteworthy."",
-    ""What does TradFi muscling its way to the front of the pack mean for crypto?"",
-    ""First, an asterisk: Bitcoin ETFs and crypto derivatives trading (much of it involving BTC) don't mean finance bros are swallowing all of crypto."",
-    ""Bitcoin is not all of crypto – though its market capitalization as a percentage of the whole crypto market is at an unusually high level above 50%."",
-    ""There are the myriad blockchains like Ethereum and its associated layer-2 networks such as Polygon that run smart contracts – software designed to power various financial and other applications – and that have their own tradable tokens."",
-    ""That's a whole largely decentralized realm (in aspiration, if not always in practice) that, even to some in TradFi, represents a way to replace conventional ways of doing finance with blockchain-powered versions."",
-    ""That fits broadly with Satoshi's peer-to-peer vision, even if some of the folks that have adopted this mindset collect Wall Street-sized paychecks."",
-    ""Which brings us back to the irony."",
-    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies."",
-    ""Crypto will still have its crypto-y moments, like last week when the price of a totally normal token called HarryPotterObamaSonic10Inu zoomed higher."",
-    ""\""We have proposed a system for electronic transactions without relying on trust,\"" Satoshi wrote 15 years ago."",
-    ""After Sam Bankman-Fried, Do Kwon and Alex Mashinsky showed what can happen when you trust crypto natives, are users prepared to trust different crypto shepherds?"",
-    ""Or will they finally ditch the shepherds, as Satoshi might have hoped?""
-  ],
-  ""Governance"": [
-    ""Satoshi Nakamoto's paper didn't explicitly say: The world needs a peer-to-peer system to move money around to replace Wall Street giants because they can't be trusted, they're falling apart, etc."",
-    ""But that was the vibe as folks picked up on the idea and made the Bitcoin blockchain and bitcoin (BTC) the cryptocurrency real."",
-    ""Bitcoin got switched on, BTC started getting mined and stuff started happening – small stuff at first."",
-    ""Other cryptocurrencies debuted, expanding what blockchains could do."",
-    ""Crypto prices soared – like, really soared – as idealists who embraced the idea of decentralization and cutting out middlemen in finance harnessed Satoshi's ideas, made them real and extended them."",
-    ""(More than a few charlatans got involved as well.)"",
-    ""Wall Street and the rest of TradFi started paying attention – trying to move conventional financial operations onto blockchains and trading \""digital assets,\"" their genteel term for cryptocurrencies."",
-    ""Today, we find ourselves at an ironic moment."",
-    ""These titans of finance are increasingly driving a space that, to many, was designed to put them out of business."",
-    ""Take, for instance, the story of the moment (excluding Sam Bankman-Fried's ongoing criminal fraud trial)."",
-    ""Giddiness over BlackRock (the biggest asset manager in the world) and some of its peers trying to list bitcoin ETFs in the U.S. pushed up bitcoin's price last week, a bet that these easy-to-trade products will bring a flood of investment into BTC."",
-    ""BlackRock and other ETF providers look poised to be – assuming regulators permit these products, and there are reasons to think they'll have to – the new bitcoin whales."",
-    ""Also, CME Group, owner of the Chicago Mercantile Exchange, is close to overtaking Binance as the largest crypto derivatives exchange in the world."",
-    ""(CME's product is a cash-settled futures contract, essentially a side bet on bitcoin's price; no BTC changes hands)."",
-    ""In other words, a business with roots in the 19th century and agricultural commodities like corn and pork bellies, and one of the key spots in all of traditional finance, is a major player in crypto trading."",
-    ""That said, this is less about how much of the total BTC stash that Wall Street holds."",
-    ""Finance people are increasingly taking over the story – at least to the mainstream – around bitcoin, to an extent that is noteworthy."",
-    ""What does TradFi muscling its way to the front of the pack mean for crypto?"",
-    ""First, an asterisk: Bitcoin ETFs and crypto derivatives trading (much of it involving BTC) don't mean finance bros are swallowing all of crypto."",
-    ""Bitcoin is not all of crypto – though its market capitalization as a percentage of the","```json
-{
-  ""Environmental"": [],
-  ""Social"": [
-    ""Crypto will still have its crypto-y moments, like last week when the price of a totally normal token called HarryPotterObamaSonic10Inu zoomed higher."",
-    ""\""We have proposed a system for electronic transactions without relying on trust,\"" Satoshi wrote 15 years ago."",
     ""After Sam Bankman-Fried, Do Kwon and Alex Mashinsky showed what can happen when you trust crypto natives, are users prepared to trust different crypto shepherds?""
   ],
   ""Governance"": [
-    ""Which brings us back to the irony."",
-    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies.""
+    ""the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies.""
   ]
 }
-```","```json
-{
-  ""Environmental"": [],
-  ""Social"": [
-    ""Crypto will still have its crypto-y moments, like last week when the price of a totally normal token called HarryPotterObamaSonic10Inu zoomed higher."",
-    ""\""We have proposed a system for electronic transactions without relying on trust,\"" Satoshi wrote 15 years ago."",
-    ""After Sam Bankman-Fried, Do Kwon and Alex Mashinsky showed what can happen when you trust crypto natives, are users prepared to trust different crypto shepherds?"",
-    ""Or will they finally ditch the shepherds, as Satoshi might have hoped?""
-  ],
-  ""Governance"": [
-    ""Which brings us back to the irony."",
-    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies.""
-  ]
-}
-```"
+```",0.0,0.0
 "First Mover Americas: BTC Steadies, but 10% Monthly Loss Questions Nasdaq Rally",https://www.coindesk.com/markets/2024/06/25/first-mover-americas-btc-steadies-but-10-monthly-loss-questions-nasdaq-rally/,"```json
 {
   ""Environmental"": [],
@@ -174,40 +65,15 @@ Title,URL,ESG Sentences Prompt 1,ESG Sentences Prompt 2,ESG Sentences Prompt 3,E
 {
   ""Environmental"": [],
   ""Social"": [],
-  ""Governance"": [
-    ""The crypto market regained some poise early Tuesday as analysts said supply overhang concerns stemming from defunct exchange Mt. Gox's planned distribution of 140,000 BTC are overdone."",
-    ""The impending U.S.-based spot ether ETFs could see less demand than their already live BTC peers, broker Bernstein said in a report Monday, echoing recent comments by investment banking giant JPMorgan."",
-    ""\""ETH should not see as much spot ETH conversion due to the lack of an ETH staking feature in the ETF,\"" analysts Gautam Chhugani and Mahika Sapra wrote, adding that the basis trade will likely find takers over time and this should contribute to healthy liquidity in the ETF market."",
-    ""Spot ether ETFs are close to becoming available to investors in the U.S. after the Securities and Exchange Commission (SEC) approved key regulatory filings from issuers last month."",
-    ""In November 2023, CoinDesk was acquired by the Bullish group, owner of Bullish, a regulated, digital assets exchange."",
-    ""The Bullish group is majority-owned by Block.one; both companies have interests in a variety of blockchain and digital asset businesses and significant holdings of digital assets, including bitcoin."",
-    ""CoinDesk operates as an independent subsidiary with an editorial committee to protect journalistic independence."",
-    ""CoinDesk employees, including journalists, may receive options in the Bullish group as part of their compensation.""
-  ]
+  ""Governance"": []
 }
 ```","```json
 {
   ""Environmental"": [],
   ""Social"": [],
   ""Governance"": [
-    ""The crypto market regained some poise early Tuesday as analysts said supply overhang concerns stemming from defunct exchange Mt. Gox's planned distribution of 140,000 BTC are overdone."",
     ""The impending U.S.-based spot ether ETFs could see less demand than their already live BTC peers, broker Bernstein said in a report Monday, echoing recent comments by investment banking giant JPMorgan."",
-    ""\""ETH should not see as much spot ETH conversion due to the lack of an ETH staking feature in the ETF,\"" analysts Gautam Chhugani and Mahika Sapra wrote, adding that the basis trade will likely find takers over time and this should contribute to healthy liquidity in the ETF market."",
     ""Spot ether ETFs are close to becoming available to investors in the U.S. after the Securities and Exchange Commission (SEC) approved key regulatory filings from issuers last month.""
-  ]
-}
-```","```json
-{
-  ""Environmental"": [],
-  ""Social"": [],
-  ""Governance"": [
-    ""The crypto market regained some poise early Tuesday as analysts said supply overhang concerns stemming from defunct exchange Mt. Gox's planned distribution of 140,000 BTC are overdone."",
-    ""The impending U.S.-based spot ether ETFs could see less demand than their already live BTC peers, broker Bernstein said in a report Monday, echoing recent comments by investment banking giant JPMorgan."",
-    ""Spot ether ETFs are close to becoming available to investors in the U.S. after the Securities and Exchange Commission (SEC) approved key regulatory filings from issuers last month."",
-    ""In November 2023, CoinDesk was acquired by the Bullish group, owner of Bullish, a regulated, digital assets exchange."",
-    ""The Bullish group is majority-owned by Block.one; both companies have interests in a variety of blockchain and digital asset businesses and significant holdings of digital assets, including bitcoin."",
-    ""CoinDesk operates as an independent subsidiary with an editorial committee to protect journalistic independence."",
-    ""CoinDesk employees, including journalists, may receive options in the Bullish group as part of their compensation.""
   ]
 }
 ```","```json
@@ -221,10 +87,17 @@ Title,URL,ESG Sentences Prompt 1,ESG Sentences Prompt 2,ESG Sentences Prompt 3,E
   ""Environmental"": [],
   ""Social"": [],
   ""Governance"": [
-    ""Spot ether ETFs are close to becoming available to investors in the U.S. after the Securities and Exchange Commission (SEC) approved key regulatory filings from issuers last month."",
-    ""In November 2023, CoinDesk was acquired by the Bullish group, owner of Bullish, a regulated, digital assets exchange."",
-    ""The Bullish group is majority-owned by Block.one; both companies have interests in a variety of blockchain and digital asset businesses and significant holdings of digital assets, including bitcoin."",
-    ""CoinDesk operates as an independent subsidiary with an editorial committee to protect journalistic independence.""
+    ""The impending U.S.-based spot ether ETFs could see less demand than their already live BTC peers, broker Bernstein said in a report Monday, echoing recent comments by investment banking giant JPMorgan."",
+    ""Spot ether ETFs are close to becoming available to investors in the U.S. after the Securities and Exchange Commission (SEC) approved key regulatory filings from issuers last month.""
   ]
 }
-```"
+```","```json
+{
+  ""Environmental"": [],
+  ""Social"": [],
+  ""Governance"": [
+    ""The impending U.S.-based spot ether ETFs could see less demand than their already live BTC peers, broker Bernstein said in a report Monday, echoing recent comments by investment banking giant JPMorgan."",
+    ""Spot ether ETFs are close to becoming available to investors in the U.S. after the Securities and Exchange Commission (SEC) approved key regulatory filings from issuers last month.""
+  ]
+}
+```",,0.7359089851379395

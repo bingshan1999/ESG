@@ -275,7 +275,7 @@ def main():
     file_path = '../data/cleaned_coindesk_btc.csv'
     df = pd.read_csv(file_path)
 
-    rows_indices = [0, 20]
+    rows_indices = [0, 1]
     max_round = 3
     
     # Initialize a DataFrame to store the sentences and their corresponding ESG-related sentences for all indices

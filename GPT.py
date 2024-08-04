@@ -1,5 +1,4 @@
 import os
-import pandas as pd
 from transformers import pipeline, GPT2Tokenizer
 from datasets import load_dataset, Dataset
 import torch
@@ -9,6 +8,7 @@ from g4f.Provider.Chatgpt4o import Chatgpt4o
 from g4f.Provider.FreeChatgpt import FreeChatgpt
 from g4f.Provider.Chatgpt4Online import Chatgpt4Online
 from g4f.Provider.ChatgptFree import ChatgptFree
+import time
 # Set environment variable for debugging (only enable during debugging phase)
 # os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 
@@ -50,7 +50,7 @@ class GPT:
     
         messages.append({"role": "user", "content": prompt})
         
-        for _ in range(max_retries):
+        for retry in range(max_retries):
             try:
                 response = self.client.chat.completions.create(
                     model=self.model_name,
@@ -71,6 +71,11 @@ class GPT:
                     return esg_sentence
             
             except Exception as e:
-                print(f"GPT failed with error: {e}")
+                if "429" in str(e):  # Check if the error message contains "429"
+                    print(f"Rate limit reached. Retrying in 30 seconds... (Attempt {retry + 1} of {max_retries})")
+                    time.sleep(30)  # Wait for 60 seconds before retrying
+                else:
+                    print(f"GPT failed with error: {e}. (Attempt {retry + 1} of {max_retries})")
+     
         
         return "Failed to get a response after multiple attempts"

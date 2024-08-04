@@ -22,82 +22,43 @@ ESG topics in crypto can be related but not limit to:
 
 def create_prompt(title, content):
     return [
+        # 1. Summary
         f"""
             Article Title: {title}
             Article Context: {content}
             
-            Let's think step by step.
+            Step 1: Summarize the article.
 
-            Step 1: Summarize the context based on the title.
-            Summary: 
-
-            Step 2: Identify and explain any Environmental (E) aspects mentioned in the context.
+            Step 2: Identify and explain any Environmental (E) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array..
             Environmental Aspects:
+            Environmental Array:
 
-            Step 3: Identify and explain any Social (S) aspects mentioned in the context.
+            Step 3: Identify and explain any Social (S) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array.
             Social Aspects:
+            Social Array:
 
-            Step 4: Identify and explain any Governance (G) aspects mentioned in the context.
+            Step 4: Identify and explain any Governance (G) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array.
             Governance Aspects:
-
-            Step 5: Justify the relevance of these aspects to ESG considerations.
-            Justification:
-            """,
-        
-        # 2. No Justification
+            Governance Array:
+        """,       
         f"""
             Article Title: {title}
             Article Context: {content}
             
-            Let's think step by step.
-
-            Step 1: Summarize the context based on the title.
-            Summary: 
-
-            Step 2: Identify and explain any Environmental (E) aspects mentioned in the context.
+            Step 2: Identify and explain any Environmental (E) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array..
             Environmental Aspects:
+            Environmental Array:
 
-            Step 3: Identify and explain any Social (S) aspects mentioned in the context.
+            Step 3: Identify and explain any Social (S) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array.
             Social Aspects:
+            Social Array:
 
-            Step 4: Identify and explain any Governance (G) aspects mentioned in the context.
+            Step 4: Identify and explain any Governance (G) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array.
             Governance Aspects:
-            """,
-
-        # 3. No summary
-        f"""
-            Article Title: {title}
-            Article Context: {content}
+            Governance Array:
+        """,
         
-            Step 1: Identify and explain any Environmental (E) aspects mentioned in the context.
-            Environmental Aspects:
-
-            Step 2: Identify and explain any Social (S) aspects mentioned in the context.
-            Social Aspects:
-
-            Step 3: Identify and explain any Governance (G) aspects mentioned in the context.
-            Governance Aspects:
-
-            Step 4: Justify the relevance of these aspects to ESG considerations.
-            Justification:
-            """,
-        
-        # 4. No Summary and Justification
-        f"""
-            Article Title: {title}
-            Article Context: {content}
-            
-            Step 1: Identify and explain any Environmental (E) aspects mentioned in the context. Try to retrain the original sentences from the article.
-            Environmental Aspects:
-
-            Step 2: Identify and explain any Social (S) aspects mentioned in the context. Try to retrain the original sentences from the article.
-            Social Aspects:
-
-            Step 3: Identify and explain any Governance (G) aspects mentioned in the context. Try to retrain the original sentences from the article.
-            Governance Aspects:
-            """,
-        
-        # 5. No title 
+        # 2. No title 
         f"""
             Article Context: {content}
             
@@ -114,7 +75,7 @@ def create_prompt(title, content):
             Governance Array:
             """,
 
-        # 6. More steps (separating aspect and array)
+        # 3. More steps (separating aspect and array)
         f"""
             Article Title: {title}
             Article Context: {content}
@@ -138,7 +99,7 @@ def create_prompt(title, content):
             Governance Array:
         """,
         
-        # 7. Lesser steps (combining aspect and array)
+        # 4. Lesser steps (combining aspect and array)
         f"""
             Article Title: {title}
             Article Context: {content}
@@ -167,16 +128,35 @@ def main():
 
     # Initialize a list to store the sentences and their corresponding ESG-related sentences
     data = []
+    # Consider running average to reduce memory usage
+    all_embeddings = {'Environmental': [], 'Social': [], 'Governance': []}
 
     for index in rows_indices:
         row = df.iloc[index]
         prompts = create_prompt(row['title'], row['content'])
-        results = {'Title': row['title'], 'URL': row['url']}
+        
+        results = {'Title': row['title'], 'URL': row['url'], 'Environmental Cosine Similarity': 0, 'Social Cosine Similarity': 0, 'Governance Cosine Similarity': 0}
         print(results)
         
         for i, prompt in enumerate(prompts):
             esg_sentence = model.extract_esg_sentence(prompt, verbose=False)
             results[f'ESG Sentences Prompt {i+1}'] = esg_sentence
+        
+        esg_sentence = results['ESG Sentences Prompt 6']
+
+        environmental_sentences, social_sentences, governance_sentences = utils.parse_esg_json(esg_sentence)
+
+        if environmental_sentences:
+            results['Environmental Cosine Similarity'] = utils.calculate_pairwise_cosine_similarity_str(environmental_sentences)
+            all_embeddings['Environmental'].extend(utils.encode_arr(environmental_sentences))
+        
+        if social_sentences:
+            results['Social Cosine Similarity'] = utils.calculate_pairwise_cosine_similarity_str(social_sentences)
+            all_embeddings['Social'].extend(utils.encode_arr(social_sentences))
+
+        if governance_sentences:
+            results['Governance Cosine Similarity'] = utils.calculate_pairwise_cosine_similarity_str(governance_sentences)
+            all_embeddings['Governance'].extend(utils.encode_arr(governance_sentences))
         
         data.append(results)
 
@@ -184,33 +164,19 @@ def main():
     #Create a DataFrame from the data list
     result_df = pd.DataFrame(data)
 
-    # output_text = result_df.loc[0, 'ESG Sentences Prompt 5']
-    # E_arr = utils.extract_json_array(output_text, "Environmental")
-    # S_arr = utils.extract_json_array(output_text, "Social")
-    # G_arr = utils.extract_json_array(output_text, "Governance")
-
-    # output_text = result_df.loc[0, 'ESG Sentences Prompt 6']
-    # E_arr_2 = utils.extract_json_array(output_text, "Environmental")
-    # S_arr_2 = utils.extract_json_array(output_text, "Social")
-    # G_arr_2 = utils.extract_json_array(output_text, "Governance")
-
-    # print(f'Env arr: {E_arr} \nSocial arr: {S_arr}\nGov arr: {G_arr}')
-    # print("\n\n")
-    # print(f'Env arr2: {E_arr_2} \nSocial arr2: {S_arr_2}\nGov arr_2: {G_arr_2}')
-    # print("\n\n")
-    # print("intersecting: ", utils.lists_to_intersection(S_arr,S_arr_2))
-    # Example: Calculate similarity between ESG Sentences from Prompt 1 and Prompt 2 in the same row
-    # for index, row in result_df.iterrows():
-    #     esg_sentence_1 = row.get('ESG Sentences Prompt 1', '')
-    #     esg_sentence_2 = row.get('ESG Sentences Prompt 2', '')
-        
-    #     if esg_sentence_1 and esg_sentence_2:
-    #         similarity = utils.calculate_similarity(esg_sentence_1, esg_sentence_2)
-    #         result_df.at[index, 'Similarity Prompt 1 and 2'] = similarity
-
-
     #Save the DataFrame to a CSV file
     result_df.to_csv("results/COT_test.csv", index=False)
+    print(all_embeddings)
+    print(f"""
+            Total embeddings:
+            E: {len(all_embeddings['Environmental'])}
+            S: {len(all_embeddings['Social'])}
+            G: {len(all_embeddings['Governance'])}
+            Overall Cosine similarity
+            E: {utils.calculate_pairwise_cosine_similarity_embedding(all_embeddings['Environmental'])}
+            S: {utils.calculate_pairwise_cosine_similarity_embedding(all_embeddings['Social'])}
+            G: {utils.calculate_pairwise_cosine_similarity_embedding(all_embeddings['Governance'])}
+        """)
 
 if __name__ == '__main__':
     main()

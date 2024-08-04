@@ -130,16 +130,23 @@ def parse_esg_json(json_data):
     tuple: A tuple containing three lists - Environmental, Social, and Governance arrays.
     """
     # Strip the ```json and ``` surrounding the actual JSON content
-    if json_data.startswith("```json"):
+    if json_data.startswith("```json") and json_data.endswith("```"):
         json_data = json_data[7:]
-    if json_data.endswith("```"):
         json_data = json_data[:-3]
+
+        # Load the JSON data
+        data = json.loads(json_data)
+        
+        environmental_array = data.get("Environmental", [])
+        social_array = data.get("Social", [])
+        governance_array = data.get("Governance", [])
+        
+        return environmental_array, social_array, governance_array
+    else: 
+        environmental_array = extract_json_array(json_data, "Environmental")
+        social_array = extract_json_array(json_data, "Social")
+        governance_array = extract_json_array(json_data, "Governance")
+        
+        return environmental_array, social_array, governance_array
     
-    # Load the JSON data
-    data = json.loads(json_data)
-    
-    environmental_array = data.get("Environmental", [])
-    social_array = data.get("Social", [])
-    governance_array = data.get("Governance", [])
-    
-    return environmental_array, social_array, governance_array
+ 

@@ -104,7 +104,7 @@ def create_prompt(title, content):
             Article Title: {title}
             Article Context: {content}
 
-            Step 1: Identify and explain any Environmental (E) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array..
+            Step 1: Identify and explain any Environmental (E) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array.
             Environmental Aspects:
             Environmental Array:
 
@@ -121,10 +121,10 @@ def create_prompt(title, content):
 def main():
     model = GPT()
     # Load your data using pandas
-    file_path = '../data/cleaned_coindesk_btc.csv'
+    file_path = '../data/coindesk_btc.csv'
     df = pd.read_csv(file_path)
 
-    rows_indices = range(0, 21) 
+    rows_indices = range(0, 20) 
 
     # Initialize a list to store the sentences and their corresponding ESG-related sentences
     data = []
@@ -142,7 +142,7 @@ def main():
             esg_sentence = model.extract_esg_sentence(prompt, verbose=False)
             results[f'ESG Sentences Prompt {i+1}'] = esg_sentence
         
-        esg_sentence = results['ESG Sentences Prompt 6']
+        esg_sentence = results['ESG Sentences Prompt 5']
 
         environmental_sentences, social_sentences, governance_sentences = utils.parse_esg_json(esg_sentence)
 
@@ -165,7 +165,7 @@ def main():
     result_df = pd.DataFrame(data)
 
     #Save the DataFrame to a CSV file
-    result_df.to_csv("results/COT_test.csv", index=False)
+    result_df.to_csv("results/COT_test_uncleaned.csv", index=False)
     print(all_embeddings)
     print(f"""
             Total embeddings:

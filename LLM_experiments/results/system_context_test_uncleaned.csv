@@ -1,0 +1,104 @@
+Title,URL,Environmental Cosine Similarity,Social Cosine Similarity,Governance Cosine Similarity,ESG Sentences Prompt 1,ESG Sentences Prompt 2
+"On Bitcoin White Paper's 15th Anniversary, Wall Street Threatens to Swallow Its One-Time Challenger",https://www.coindesk.com/business/2023/10/31/on-bitcoin-white-papers-15th-anniversary-wall-street-threatens-to-swallow-its-one-time-challenger/,0,0.42564021547635394,0.19589073956012726,"```json
+{
+  ""Environmental"": [],
+  ""Social"": [
+    ""After Sam Bankman-Fried, Do Kwon and Alex Mashinsky showed what can happen when you trust crypto natives, are users prepared to trust different crypto shepherds?""
+  ],
+  ""Governance"": [
+    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they're clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies."",
+    ""That fits broadly with Satoshi's peer-to-peer vision, even if some of the folks that have adopted this mindset collect Wall Street-sized paychecks.""
+  ]
+}
+```","Sure! Let's break down the article based on the Environmental, Social, and Governance (ESG) aspects.
+
+### Step 1: Identify and explain any Environmental (E) aspects mentioned in the article.
+**Environmental Aspects:**
+The article does not explicitly mention any environmental issues related to cryptocurrency, such as energy consumption, carbon emissions, or resource management. However, the broader context of Bitcoin mining and its environmental impact could be inferred, given the ongoing discussions in the cryptocurrency space about energy usage.
+
+### Step 2: Based on Step 1, extract the original sentences from the article that relate to the Environmental Aspects.
+**Environmental Array:**
+```json
+[]
+```
+
+### Step 3: Identify and explain any Social (S) aspects mentioned in the article.
+**Social Aspects:**
+1. **Market Instability:** The article discusses the volatility of cryptocurrency prices and how they can soar unexpectedly, which reflects market instability.
+2. **Security and User Protection:** The mention of a major crypto exchange being hacked highlights concerns about security and user protection in the cryptocurrency space.
+3. **Illicit Activities:** The reference to past incidents involving figures like Sam Bankman-Fried suggests concerns about trust and illicit activities within the crypto community.
+
+### Step 4: Based on Step 3, extract the original sentences from the article that relate to the Social Aspects.
+**Social Array:**
+```json
+[
+    ""That said, this is less about how much of the total BTC stash that Wall Street holds."",
+    ""Crypto will still have its crypto-y moments, like last week when the price of a totally normal token called HarryPotterObamaSonic10Inu zoomed higher."",
+    ""After Sam Bankman-Fried, Do Kwon and Alex Mashinsky showed what can happen when you trust crypto natives, are users prepared to trust different crypto shepherds?""
+]
+```
+
+### Step 5: Identify and explain any Governance (G) aspects mentioned in the article.
+**Governance Aspects:**
+1. **Regulatory Compliance:** The article discusses the potential for Bitcoin ETFs and the involvement of traditional finance, indicating a need for regulatory compliance.
+2. **Decentralized Governance Models:** The mention of the original vision of Bitcoin as a peer-to-peer system suggests a contrast between decentralized governance and the increasing influence of traditional financial institutions.
+
+### Step 6: Based on Step 5, extract the original sentences from the article that relate to the Governance Aspects.
+**Governance Array:**
+```json
+[
+    ""Whether bitcoin and crypto folks like it or not, TradFi is coming/is already here – though the degree of their involvement will hinge on regulators' desires, and they’re clearly not psyched, judging, for instance, from the actions of the U.S. Securities and Exchange Commission and banking agencies."",
+    ""That fits broadly with Satoshi's peer-to-peer vision, even if some of the folks that have adopted this mindset collect Wall Street-sized paychecks.""
+]
+```
+
+If you have any more questions or need further assistance, feel free to ask!"
+Bitcoin and Crypto Closing Out Lame Quarter and One Analyst Believes More Pain Could Be in Store,https://www.coindesk.com/markets/2024/06/28/bitcoin-and-crypto-closing-out-lame-quarter-and-one-analyst-believes-more-pain-could-be-in-store/,0,0.4933789372444153,0.26774074137210846,"```json
+{
+  ""Environmental"": [],
+  ""Social"": [],
+  ""Governance"": [
+    ""CoinDesk operates as an independent subsidiary with an editorial committee to protect journalistic independence."",
+    ""CoinDesk employees, including journalists, may receive options in the Bullish group as part of their compensation.""
+  ]
+}
+```","Sure! Let’s break down the article and identify the relevant ESG aspects.
+
+### Step 1: Identify and explain any Environmental (E) aspects mentioned in the article.
+**Environmental Aspects:**
+The article does not explicitly mention any environmental issues related to energy consumption, carbon emissions, resource management, renewable energy usage, or electronic waste production. However, the broader context of cryptocurrency often involves discussions about energy-intensive mining processes, which could be inferred but are not directly addressed in this specific article.
+
+### Step 2: Based on Step 1, extract the original sentences from the article that relate to the Environmental Aspects.
+**Environmental Array:**
+```json
+[]
+```
+
+### Step 3: Identify and explain any Social (S) aspects mentioned in the article.
+**Social Aspects:**
+The article touches on market instability and the influence of major financial institutions. The mention of the anticipation of ETF approvals and the impact of macroeconomic factors on cryptocurrency prices reflects the social dynamics of market participation and investor behavior.
+
+### Step 4: Based on Step 3, extract the original sentences from the article that relate to the Social Aspects.
+**Social Array:**
+```json
+[
+    ""Anticipation of the spot bitcoin ETF approval, then the approval, and then the massive inflows into the new funds were surely major catalysts for the rise."",
+    ""With ETF inflows old news and even on occasion reversing to outflows, and hopes for lower interest rates diminishing daily, buyers appear to have taken to the sidelines until a new catalyst arises.""
+]
+```
+
+### Step 5: Identify and explain any Governance (G) aspects mentioned in the article.
+**Governance Aspects:**
+The article discusses regulatory compliance and the influence of political figures on cryptocurrency sentiment. The mention of Donald Trump being pro-crypto and the potential for a new Democratic nominee indicates how governance and political factors can affect market dynamics.
+
+### Step 6: Based on Step 5, extract the original sentences from the article that relate to the Governance Aspects.
+**Governance Array:**
+```json
+[
+    ""Thielen noted that many trend-following funds are looking at the same signals and might be inclined to pile into short positions."",
+    ""Also in play were macro factors – namely the anticipation of a sizable series of interest rate cuts in 2024 from the U.S. Federal Reserve."",
+    ""Thielen also reminded about seasonality.""
+]
+```
+
+If you have any more questions or need further assistance, feel free to ask!"

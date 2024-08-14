@@ -6,6 +6,7 @@ import re
 
 # Load pre-trained sentence transformer model
 model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+#model = SentenceTransformer('distilbert-base-nli-stsb-mean-tokens')
 
 def encode_arr(sentences_arr):
     """
@@ -131,17 +132,23 @@ def parse_esg_json(json_data):
     """
     # Strip the ```json and ``` surrounding the actual JSON content
     if json_data.startswith("```json") and json_data.endswith("```"):
-        json_data = json_data[7:]
-        json_data = json_data[:-3]
+        json_data = json_data[7:-3]
+        # Replace invalid escape sequences
+        json_data = json_data.replace('\\', '\\\\')
 
-        # Load the JSON data
-        data = json.loads(json_data)
-        
-        environmental_array = data.get("Environmental", [])
-        social_array = data.get("Social", [])
-        governance_array = data.get("Governance", [])
-        
-        return environmental_array, social_array, governance_array
+        try:
+            # Load the JSON data
+            data = json.loads(json_data)
+            
+            environmental_array = data.get("Environmental", [])
+            social_array = data.get("Social", [])
+            governance_array = data.get("Governance", [])
+            
+            return environmental_array, social_array, governance_array
+
+        except json.JSONDecodeError as e:
+            print(f"JSONDecodeError: {e}")
+        return [],[],[]
     else: 
         environmental_array = extract_json_array(json_data, "Environmental")
         social_array = extract_json_array(json_data, "Social")

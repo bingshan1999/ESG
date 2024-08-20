@@ -20,7 +20,7 @@ Given an article, you will be asked to extract ESG issues from it.
 Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
 
 - Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production.
-- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection, Entry Barrier and Accessibility, Market Instability, Illicit Activities, Influence of major financial institutions
+- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection, Entry Barrier and Accessibility, Market Instability, Illicit Activities, Influence of Large Financial Institutions and Crypto Institution
 - Governance (G): Decentralized Governance Models (off-chain and on-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
 """
 
@@ -42,7 +42,7 @@ Here are the key ESG issues that are particularly relevant in the context of cry
 # Define the prompt template
 def non_system_context_prompt(title, content):
     return [f"""
-          {system_context_2}
+          {system_context}
           Article Title: {title}
           Article Context: {content}
           
@@ -53,7 +53,7 @@ def non_system_context_prompt(title, content):
           3) 'Governance':  An array containing all sentences related to Governance aspect 
         """,
         f"""
-            {system_context_2}
+            {system_context}
             Article Title: {title}
             Article Context: {content}
 
@@ -116,7 +116,7 @@ def system_context_prompt(title, content):
         """]
 
 def main():
-    model = GPT(system_context=system_context_2)
+    model = GPT(system_context=system_context)
     model_2 = GPT()
 
     # Load your data using pandas
@@ -221,7 +221,7 @@ def main():
     result_df = pd.DataFrame(data)
 
     # Save the DataFrame to a CSV file
-    result_df.to_csv("results/system_context_test_3.csv", index=False)
+    result_df.to_csv("results/system_context_test_2.csv", index=False)
 
     # Plot the results
     #plot_cosine_similarities(result_df)

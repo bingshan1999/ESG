@@ -14,21 +14,39 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from GPT import GPT
 import utils
 
+system_context = """
+You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
+Given an article, you will be asked to extract ESG issues from it. 
+Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
+
+- Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production.
+- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection, Entry Barrier and Accessibility, Market Instability, Illicit Activities, Influence of Large Financial Institutions and Crypto Institution
+- Governance (G): Decentralized Governance Models (off-chain and on-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
+"""
+
 def create_prompt(title, content):
     return f"""
         Article Title: {title}
         Article Context: {content}
 
-        Step 1: Identify and explain any Environmental (E) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array..
+        Task:
+        Let's think step by step.
+        Step 1: Identify and explain any Environmental (E) aspects mentioned in the article.
         Environmental Aspects:
+
+        Step 2: Based on Step 1, extract the original sentences from the article that relates to the Environmental Aspects. Return the sentences in an array.
         Environmental Array:
 
-        Step 2: Identify and explain any Social (S) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array.
+        Step 3: Identify and explain any Social (S) aspects mentioned in the article. 
         Social Aspects:
-        Social Array:
 
-        Step 3: Identify and explain any Governance (G) aspects mentioned in the context. Additionally, extract the relevant sentences from the article and return it as an array.
+        Step 4: Based on Step 3, extract the original sentences from the article that relates to the Social Aspects. Return the sentences in an array.
+        Social Array:
+        
+        Step 5: Identify and explain any Governance (G) aspects mentioned in the article.
         Governance Aspects:
+
+        Step 6: Based on Step 5, extract the original sentences from the article that relates to the Governance Aspects. Return the sentences in an array.
         Governance Array:
     """
 def calculate_combined_similarity(responses, keyword):
@@ -270,7 +288,7 @@ def debate_process(model, prompt, title, url, num_agents=2, max_rounds=3, conver
     return logs
 
 def main():
-    model = GPT()
+    model = GPT(system_context=system_context)
     # Load your data using pandas
     file_path = '../data/cleaned_coindesk_btc.csv'
     df = pd.read_csv(file_path)

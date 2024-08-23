@@ -176,7 +176,7 @@ def refine_responses(model, num_agents, title, content, sentences, critiques):
 
     #print(f'REFINEMENT PROMPT: {refinement_prompt} \n\n')
     print(f'FINAL SENTENCES: {sentences} \n\n')
-    return matches, sentences
+    return decision_matches, sentences
 
 def main():
     response_model = GPT(system_context=system_context)
@@ -219,7 +219,7 @@ def main():
                 critiques_str += f"  Agent {i+1}:\n    " + "\n    ".join(critique.splitlines()) + "\n"
         results['Critiques'] = critiques_str
         results['Refined Sentences'] = "\n".join(refined_sentences)
-        results['Matches'] = "\n".join(matches)
+        results['Matches'] = "\n\n".join([",".join(sublist) for sublist in matches])
         # Calculate the number of removals
         initial_set = set(extracted_sentences)
         refined_set = set(refined_sentences)
@@ -231,7 +231,7 @@ def main():
         
     # Save the combined DataFrame to a CSV file
     all_logs_df = pd.DataFrame(all_logs)
-    all_logs_df.to_csv("results/debate_test.csv", index=False)
+    all_logs_df.to_csv("results/debate_test_matches.csv", index=False)
 
 if __name__ == '__main__':
     main()

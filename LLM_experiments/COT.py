@@ -124,7 +124,7 @@ def main():
     file_path = '../data/coindesk_btc.csv'
     df = pd.read_csv(file_path)
 
-    rows_indices = range(0, 20) 
+    rows_indices = range(0, 5) 
 
     # Initialize a list to store the sentences and their corresponding ESG-related sentences
     data = []

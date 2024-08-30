@@ -49,75 +49,75 @@ Here are the key ESG issues that are particularly relevant in the context of cry
 - Market Instability including huge drop in price, constituting risks to investor
 - Illicit activities for example fraud, corruption, financial crimes
 """
-# Define the prompt template
-def non_system_context_prompt(title, content):
-    return [f"""
-          {system_context}
-          Article Title: {title}
-          Article Context: {content}
-          
-          Task: Identify any sentences from the article that might involve ESG (Environmental, Social, Governance) topics. 
-          Return your answer in a JSON array format with each identified sentence as a string.
+
+def generate_prompts(title, content, system_context=None):
+    """Generate prompts based on the title and content, optionally including a system context."""
+    
+    # Prepend system context if provided, otherwise use an empty string
+    context_prefix = f"{system_context}\n" if system_context else ""
+    
+    return [
+        f"""
+        {context_prefix}Article Title: {title}
+        Article Context: {content}
+
+        Task: Identify any sentences from the article that might involve ESG (Environmental, Social, Governance) topics. 
+        Return your answer in a JSON array format with each identified sentence as a string.
         """,
         f"""
-            {system_context}
-            Article Title: {title}
-            Article Context: {content}
+        {context_prefix}Article Title: {title}
+        Article Context: {content}
 
-            Task:
-            Let's think step by step.
-            Step 1: Identify and explain any Environmental (E) aspects mentioned in the article.
-            Environmental Aspects:
+        Task:
+        Let's think step by step.
+        Step 1: Identify and explain any Environmental (E) aspects mentioned in the article.
+        Environmental Aspects:
 
-            Step 2: Based on Step 1, extract the original sentences from the article that relates to the Environmental Aspects. Return the sentences in a JSON array.
-            Environmental Array:
+        Step 2: Based on Step 1, extract the original sentences from the article that relate to the Environmental Aspects. Return the sentences in a JSON array.
+        Environmental Array:
 
-            Step 3: Identify and explain any Social (S) aspects mentioned in the article. 
-            Social Aspects:
+        Step 3: Identify and explain any Social (S) aspects mentioned in the article.
+        Social Aspects:
 
-            Step 4: Based on Step 3, extract the original sentences from the article that relates to the Social Aspects. Return the sentences in a JSON array.
-            Social Array:
+        Step 4: Based on Step 3, extract the original sentences from the article that relate to the Social Aspects. Return the sentences in a JSON array.
+        Social Array:
+
+        Step 5: Identify and explain any Governance (G) aspects mentioned in the article.
+        Governance Aspects:
+
+        Step 6: Based on Step 5, extract the original sentences from the article that relate to the Governance Aspects. Return the sentences in a JSON array.
+        Governance Array:
+        """
+    ]
+
+def extract_and_evaluate(model, prompts, ground_truth):
+    """Extract sentences using the model and evaluate them."""
+    results = {}
+    all_sentence_embeddings = []
+
+    for i, prompt in enumerate(prompts):
+        esg_sentences = model.extract_esg_sentence(prompt, verbose=False)
+        results[f'Prompt {i + 1} ESG Sentences'] = esg_sentences
+
+        # Parse and encode sentences
+        esg_sentence_list = utils.parse_esg_json(esg_sentences)
+        embeddings = utils.encode_arr(esg_sentence_list)
+        
+        all_sentence_embeddings.append(embeddings)
             
-            Step 5: Identify and explain any Governance (G) aspects mentioned in the article.
-            Governance Aspects:
 
-            Step 6: Based on Step 5, extract the original sentences from the article that relates to the Governance Aspects. Return the sentences in a JSON array.
-            Governance Array:
-        """]
+        # Evaluate extracted sentences
+        tp, fp, fn, overall_iou, best_iou = utils.evaluate_extracted_sentences(esg_sentence_list, ground_truth)
+        #print(f'tp: {tp}, fp: {fp}, fn: {fn}, all_iou: {overall_iou:.4f}, best_iou:{best_iou:.4f}')
+        
+        # Store evaluation metrics
+        results[f'Prompt {i + 1} TP'] = tp
+        results[f'Prompt {i + 1} FP'] = fp
+        results[f'Prompt {i + 1} FN'] = fn
+        results[f'Prompt {i + 1} All IOU'] = overall_iou
+        results[f'Prompt {i + 1} Best IOU'] = best_iou
 
-def system_context_prompt(title, content):
-    return [f"""
-          Article Title: {title}
-          Article Context: {content}
-          
-          Task: 
-          Identify any sentences from the article that might involve ESG (Environmental, Social, Governance) topics related to Bitcoin. 
-          Return your answer in a JSON array format with each identified sentence as a string.
-        """,
-        f"""
-            Article Title: {title}
-            Article Context: {content}
-
-            Task:
-            Let's think step by step.
-            Step 1: Identify and explain any Environmental (E) aspects mentioned in the article.
-            Environmental Aspects:
-
-            Step 2: Based on Step 1, extract the original sentences from the article that relates to the Environmental Aspects. Return the sentences in a JSON array.
-            Environmental Array:
-
-            Step 3: Identify and explain any Social (S) aspects mentioned in the article. 
-            Social Aspects:
-
-            Step 4: Based on Step 3, extract the original sentences from the article that relates to the Social Aspects. Return the sentences in a JSON array.
-            Social Array:
-            
-            Step 5: Identify and explain any Governance (G) aspects mentioned in the article.
-            Governance Aspects:
-
-            Step 6: Based on Step 5, extract the original sentences from the article that relates to the Governance Aspects. Return the sentences in a JSON array.
-            Governance Array:
-        """]
+    return results, all_sentence_embeddings
 
 def read_ground_truth_from_csv(csv_file_path):
     df = pd.read_csv(csv_file_path)
@@ -125,113 +125,71 @@ def read_ground_truth_from_csv(csv_file_path):
     return ground_truth_by_article
 
 def main():
-    model = GPT(system_context=system_context)
-    model_2 = GPT()
+    model_system = GPT(system_context=system_context)
+    model_non_system = GPT()
 
     # Load your data using pandas
     data_file_path = '../data/cleaned_coindesk_btc.csv'
     df = pd.read_csv(data_file_path)
-
     ground_truth_path = '../data/ground_truth.csv'
     ground_truth = read_ground_truth_from_csv(ground_truth_path)
 
     rows_indices = [i for i in range(0, 22) if i not in [6, 14]]  # Exclude specific articles
+    #rows_indices = [0,1]
+    all_logs = []
 
-    all_sentence_embeddings = []
-    data = []
+    # Initialize lists to store embeddings for each of the six experiments
+    embeddings_dict = {
+        'System ZS': [],
+        'System CoT': [],
+        'Non-System ZS': [],
+        'Non-System CoT': [],
+        'User-System ZS': [],
+        'User-System CoT': []
+    }
 
     for index in rows_indices:
         row = df.iloc[index]
-        prompts_1 = system_context_prompt(row['title'], row['content'])
-        prompts_2 = non_system_context_prompt(row['title'], row['content'])
         results = {'Title': row['title'], 'URL': row['url']}
-        print(f'{index}: {results}')
+        print(f'Processing Article {index}: {results["Title"]}')
 
-        # Loop over the system context prompts
-        for i, prompt in enumerate(prompts_1):
-            esg_sentences = model.extract_esg_sentence(prompt, verbose=False)
-            results[f'ESG Sentences System Prompt {i+1}'] = esg_sentences
+        # Generate prompts for different experiments
+        prompts_system = generate_prompts(row['title'], row['content'], system_context)
+        prompts_non_system = generate_prompts(row['title'], row['content'])
 
-            # Get all sentences as a single list from parse_esg_json
-            esg_sentence_list = utils.parse_esg_json(esg_sentences)
+        # System context experiment
+        system_results, system_embeddings = extract_and_evaluate(model_system, prompts_system, ground_truth[index + 1])
+        embeddings_dict['System ZS'].extend(system_embeddings[0])
+        embeddings_dict['System CoT'].extend(system_embeddings[1])
+        for key, value in system_results.items():
+            results[f'System {key}'] = value
 
-            # Encode sentences and add to global list
-            embeddings = utils.encode_arr(esg_sentence_list)
-            all_sentence_embeddings.extend(embeddings)
+        # Non-system context experiment
+        non_system_results, non_system_embeddings = extract_and_evaluate(model_non_system, prompts_non_system, ground_truth[index + 1])
+        embeddings_dict['Non-System ZS'].extend(non_system_embeddings[0])
+        embeddings_dict['Non-System CoT'].extend(non_system_embeddings[1])
+        for key, value in non_system_results.items():
+            results[f'Non-System {key}'] = value
 
-            # Evaluate sentences and get TP, FP, FN, IoU, Precision, Recall
-            tp, fp, fn, overall_iou, token_coverage, precision, recall = utils.evaluate_extracted_sentences(esg_sentence_list, ground_truth[index+1])
-
-            # Add these metrics to the results
-            results[f'System Prompt {i+1} TP'] = tp
-            results[f'System Prompt {i+1} FP'] = fp
-            results[f'System Prompt {i+1} FN'] = fn
-            results[f'System Prompt {i+1} IoU'] = overall_iou
-            results[f'System Prompt {i+1} Coverage'] = token_coverage
-            #results[f'System Prompt {i+1} Precision'] = precision
-            #results[f'System Prompt {i+1} Recall'] = recall
-
-        # Loop over the non-system context prompts
-        for i, prompt in enumerate(prompts_2):
-            esg_sentences = model_2.extract_esg_sentence(prompt, verbose=False)
-            results[f'ESG Sentences Non-System Prompt {i+1}'] = esg_sentences
-
-            # Get all sentences as a single list from parse_esg_json
-            esg_sentence_list = utils.parse_esg_json(esg_sentences)
-
-            # Encode sentences and add to global list
-            embeddings = utils.encode_arr(esg_sentence_list)
-            all_sentence_embeddings.extend(embeddings)
-
-            # Evaluate sentences and get TP, FP, FN, IoU, Precision, Recall
-            tp, fp, fn, overall_iou, token_coverage, precision, recall = utils.evaluate_extracted_sentences(esg_sentence_list, ground_truth[index+1])
-
-            # Add these metrics to the results
-            results[f'Non-System Prompt {i+1} TP'] = tp
-            results[f'Non-System Prompt {i+1} FP'] = fp
-            results[f'Non-System Prompt {i+1} FN'] = fn
-            results[f'Non-System Prompt {i+1} IoU'] = overall_iou
-            results[f'System Prompt {i+1} Coverage'] = token_coverage
-            #results[f'Non-System Prompt {i+1} Precision'] = precision
-            #results[f'Non-System Prompt {i+1} Recall'] = recall
-
-        # Loop over the user context prompts
-        for i, prompt in enumerate(prompts_1):
-            esg_sentences = model_2.extract_esg_sentence(prompt, verbose=False)
-            results[f'ESG Sentences User Prompt {i+1}'] = esg_sentences
-
-            # Get all sentences as a single list from parse_esg_json
-            esg_sentence_list = utils.parse_esg_json(esg_sentences)
-
-            # Encode sentences and add to global list
-            embeddings = utils.encode_arr(esg_sentence_list)
-            all_sentence_embeddings.extend(embeddings)
-
-            # Evaluate sentences and get TP, FP, FN, IoU, Precision, Recall
-            tp, fp, fn, overall_iou, token_coverage, precision, recall = utils.evaluate_extracted_sentences(esg_sentence_list, ground_truth[index+1])
-
-            # Add these metrics to the results
-            results[f'User Prompt {i+1} TP'] = tp
-            results[f'User Prompt {i+1} FP'] = fp
-            results[f'User Prompt {i+1} FN'] = fn
-            results[f'User Prompt {i+1} IoU'] = overall_iou
-            results[f'System Prompt {i+1} Coverage'] = token_coverage
-            #results[f'User Prompt {i+1} Precision'] = precision
-            #results[f'User Prompt {i+1} Recall'] = recall
-
-        data.append(results)
+        # User prompt context experiment (non-system prompt with user context)
+        user_results, user_embeddings = extract_and_evaluate(model_non_system, prompts_system, ground_truth[index + 1])
+        embeddings_dict['User-System ZS'].extend(user_embeddings[0])
+        embeddings_dict['User-System CoT'].extend(user_embeddings[1])
+        for key, value in user_results.items():
+            results[f'User-System {key}'] = value
+            
+        all_logs.append(results)
 
     # Create a DataFrame from the data list
-    result_df = pd.DataFrame(data)
-
-    # Save the DataFrame to a CSV file
+    result_df = pd.DataFrame(all_logs)
     result_df.to_csv("results/updated_system_context_test_new.csv", index=False)
 
-    print("Results saved to 'results/updated_system_context_test_new_2.csv'.")
-
-    # Calculate cosine similarity of all extracted sentences
-    overall_cosine_similarity = utils.calculate_pairwise_cosine_similarity_embedding(all_sentence_embeddings)
-    print(f"Overall Cosine Similarity: {overall_cosine_similarity}")
+    # Calculate overall cosine similarity for all six experiments
+    #print(embeddings_dict)
+    for experiment_name, embeddings in embeddings_dict.items():
+        if len(embeddings) > 1:  # Ensure there are at least two embeddings for cosine similarity
+            cosine_similarity = utils.calculate_pairwise_cosine_similarity_embedding(embeddings)
+            print(f"{experiment_name} Overall Cosine Similarity: {cosine_similarity}")
 
 if __name__ == "__main__":
     main()

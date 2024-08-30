@@ -203,11 +203,6 @@ def refine_responses(model, num_agents, title, content, sentences, critiques):
     print(f'FINAL SENTENCES: {sentences} \n\n')
     return decision_matches, sentences
 
-def read_ground_truth_from_csv(csv_file_path):
-    df = pd.read_csv(csv_file_path)
-    ground_truth_by_article = df.groupby('id')['sentence'].apply(list).to_dict()
-    return ground_truth_by_article
-
 def filter_content(content, previous_sentences, iou_threshold=0.5):
     """
     Remove sentences from the article content that have a high IoU with previously extracted sentences.
@@ -247,198 +242,85 @@ def filter_content(content, previous_sentences, iou_threshold=0.5):
     return filtered_content
 
 def main():
-    response_model = GPT(system_context=system_context)
-    critique_model = GPT(system_context=system_context)
-    refinement_model = GPT(system_context=system_context)
-    num_agents_initial = 3
-    num_agents_critique = 3
-    num_iterations = 4
-
+    model = GPT(system_context=system_context)
+    #num_iterations = 3
+    num_agents = range(3,7)
+    num_criqitues = 3
     # Load your data using pandas
     file_path = '../data/cleaned_coindesk_btc.csv'
     df = pd.read_csv(file_path)
     ground_truth_path = '../data/ground_truth.csv'
-    ground_truth = read_ground_truth_from_csv(ground_truth_path)
-    all_logs = []
+    ground_truth = utils.read_ground_truth_from_csv(ground_truth_path)
+
     rows_indices = [i for i in range(0, 22) if i not in [6, 14]]  # Exclude specific articles
-    rows_indices = [0,1]
+    #rows_indices = [0]  # For testing with a single row
 
-    # Initialize a nested dictionary to store metrics for each row and iteration
-    metrics_over_iterations = {index: {iteration: {'Precision': 0, 'Recall': 0, 'All IOU': 0, 'Best IOU': 0, 'IoU Improvement': 0, 'IoU Decrease': 0}
-                                       for iteration in range(0, num_iterations + 1)}
-                               for index in rows_indices}
+    # Store metrics for different agent counts
+    metrics_per_agent = {num_agent: {'Precision': [], 'Recall': [], 'All IOU': [], 'Best IOU': []} for num_agent in num_agents}
 
-    for index in rows_indices:
-        row = df.iloc[index]
-        results = {'Title': row['title'], 'URL': row['url']}
-        print(results)
-
-        ######################### First iteration
-        extracted_sentences = generate_initial_responses(response_model, num_agents_initial, row['title'], row['content'])
-        critiques = critique_responses(critique_model, num_agents_critique, row['title'], row['content'], extracted_sentences)   
-        matches, refined_sentences = refine_responses(refinement_model, num_agents_critique, row['title'], row['content'], extracted_sentences, critiques)
-
-        # Calculate metrics for the first iteration
-        tp, fp, fn, all_iou, best_iou = utils.evaluate_extracted_sentences(refined_sentences, ground_truth[index + 1])
-        print(f'tp: {tp}, fp: {fp}, fn: {fn}, all_iou: {all_iou:.4f}, best_iou:{best_iou:.4f}')
-        precision = tp / (tp + fp) if (tp + fp) > 0 else 0
-        recall = tp / (tp + fn) if (tp + fn) > 0 else 0
-
-        # Store the metrics
-        metrics_over_iterations[index][0] = {
-            'Precision': precision,
-            'Recall': recall,
-            'All IOU': all_iou,
-            'Best IOU': best_iou,
-            'IoU Improvement': 0,
-            'IoU Decrease': 0
-        }
-        
-        # Store the extracted sentences, critiques, and refined sentences
-        results['Extracted Sentences'] = "\n".join(extracted_sentences)
-        critiques_str = ""
-        for sentence_idx, agent_critiques in critiques.items():
-            critiques_str += f"Sentence {sentence_idx}:\n"
-            for i, critique in enumerate(agent_critiques):
-                critiques_str += f"  Agent {i+1}:\n    " + "\n    ".join(critique.splitlines()) + "\n"
-        results['Critiques'] = critiques_str
-        results['Refined Sentences'] = "\n".join(refined_sentences)
-        results['Matches'] = "\n\n".join([",".join(sublist) for sublist in matches])
-        results['TP'] = tp 
-        results['FP'] = fn 
-        results['FN'] = fn
-
-        ############################ NEXT ITERATIONS
-        for iteration in range(1, num_iterations + 1):
-            print(f"==============ITERATION: {iteration}==============")
-            new_article = filter_content(row['content'], refined_sentences)
-            #print(f'NEW ARTICLE: {new_article}')
-            
-            new_extracted_sentences = generate_initial_responses(response_model, num_agents_initial, row['title'], new_article) 
-            new_critiques = critique_responses(critique_model, num_agents_critique, row['title'], row['content'], new_extracted_sentences) # pass the original article for full context
-            matches, new_refined_sentences = refine_responses(refinement_model, num_agents_critique, row['title'], row['content'], new_extracted_sentences, new_critiques)
-            
-            final_ans = refined_sentences + new_refined_sentences
-
-            new_tp, new_fp, new_fn, new_all_iou, new_best_iou = utils.evaluate_extracted_sentences(final_ans, ground_truth[index + 1])
-            new_precision = new_tp / (new_tp + new_fp) if (new_tp + new_fp) > 0 else 0
-            new_recall = new_tp / (new_tp + new_fn) if (new_tp + new_fn) > 0 else 0
-            print(f'tp: {tp}, fp: {fp}, fn: {fn}, all_iou: {all_iou:.4f}, best_iou:{best_iou:.4f}')
-
-            # Calculate IoU improvement or decrease
-            iou_improvement = new_all_iou - metrics_over_iterations[index][iteration - 1]['All IOU']
-            iou_decrease = 0
-            
-            if iou_improvement > 0:
-                metrics_over_iterations[index][iteration]['IoU Improvement'] = 1
-            elif iou_improvement < 0:
-                metrics_over_iterations[index][iteration]['IoU Decrease'] = 1
-                iou_decrease = 1
-
-            # Store the metrics for the current iteration
-            metrics_over_iterations[index][iteration] = {
-                'Precision': new_precision,
-                'Recall': new_recall,
-                'All IOU': new_all_iou,
-                'Best IOU': new_best_iou,
-                'IoU Improvement': 1 if iou_improvement > 0 else 0,
-                'IoU Decrease': iou_decrease
-            }
-
-            # Store the extracted sentences, critiques, and refined sentences
-            results[f'Iteration {iteration} Extracted Sentences'] = "\n".join(new_extracted_sentences)
-            critiques_str = ""
-            for sentence_idx, agent_critiques in new_critiques.items():
-                critiques_str += f"Sentence {sentence_idx}:\n"
-                for i, critique in enumerate(agent_critiques):
-                    critiques_str += f"  Agent {i+1}:\n    " + "\n    ".join(critique.splitlines()) + "\n"
-            results[f'Iteration {iteration} Critiques'] = critiques_str
-            results[f'Iteration {iteration} Refined Sentences'] = "\n".join(new_refined_sentences)
-            results[f'Iteration {iteration} TP'] = tp 
-            results[f'Iteration {iteration} FP'] = fn 
-            results[f'Iteration {iteration} FN'] = fn
-            print(f'{len(new_refined_sentences)} Additions with {iou_improvement:.4f} IOU changes')
-            refined_sentences = final_ans
-        
-        all_logs.append(results)
-        
-     # Save the combined DataFrame to a CSV file
-    all_logs_df = pd.DataFrame(all_logs)
-    all_logs_df.to_csv("results/feedback_debate_test_2.csv", index=False)
-    # Calculate the average metrics over all rows for each iteration
-    avg_metrics_per_iteration = {iteration: {'Precision': 0, 'Recall': 0, 'All IOU': 0, 'Best IOU': 0} for iteration in range(0, num_iterations + 1)}
-
-    for iteration in range(0, num_iterations + 1):
-        precision_sum = recall_sum = all_iou_sum = best_iou_sum = 0
+    for num_agent in num_agents:
         for index in rows_indices:
-            precision_sum += metrics_over_iterations[index][iteration]['Precision']
-            recall_sum += metrics_over_iterations[index][iteration]['Recall']
-            all_iou_sum += metrics_over_iterations[index][iteration]['All IOU']
-            best_iou_sum += metrics_over_iterations[index][iteration]['Best IOU']
-        
-        avg_metrics_per_iteration[iteration]['Precision'] = precision_sum / len(rows_indices)
-        avg_metrics_per_iteration[iteration]['Recall'] = recall_sum / len(rows_indices)
-        avg_metrics_per_iteration[iteration]['All IOU'] = all_iou_sum / len(rows_indices)
-        avg_metrics_per_iteration[iteration]['Best IOU'] = best_iou_sum / len(rows_indices)
+            row = df.iloc[index]
+            results = {'Title': row['title'], 'URL': row['url']}
+            print(results)
 
-    # Plot metrics
-    print(metrics_over_iterations)
-    plot_metrics_over_iterations(avg_metrics_per_iteration)
-    plot_iou_changes(metrics_over_iterations)
+            # First iteration
+            extracted_sentences = generate_initial_responses(model, num_agent, row['title'], row['content'])
+            critiques = critique_responses(model, num_criqitues, row['title'], row['content'], extracted_sentences)
+            matches, refined_sentences = refine_responses(model, num_criqitues, row['title'], row['content'], extracted_sentences, critiques)
 
-def plot_metrics_over_iterations(avg_metrics_per_iteration):
-    """Plot Average IoU, Precision, Recall, and Best IoU over iterations."""
-    
-    plt.figure(figsize=(12, 8))
+            # Calculate metrics for the first iteration
+            tp, fp, fn, all_iou, best_iou = utils.evaluate_extracted_sentences(refined_sentences, ground_truth[index + 1])
+            print(f'Number of agent: {num_agent}, tp: {tp}, fp: {fp}, fn: {fn}, all_iou: {all_iou:.4f}, best_iou: {best_iou:.4f}')
+            precision = tp / (tp + fp) if (tp + fp) > 0 else 0
+            recall = tp / (tp + fn) if (tp + fn) > 0 else 0
 
-    # Determine the number of iterations
-    iterations = list(avg_metrics_per_iteration.keys())
+            # Store metrics for this agent count
+            metrics_per_agent[num_agent]['Precision'].append(precision)
+            metrics_per_agent[num_agent]['Recall'].append(recall)
+            metrics_per_agent[num_agent]['All IOU'].append(all_iou)
+            metrics_per_agent[num_agent]['Best IOU'].append(best_iou)
 
-    # Extract each metric
-    avg_iou = [avg_metrics_per_iteration[iteration]['All IOU'] for iteration in iterations]
-    avg_best_iou = [avg_metrics_per_iteration[iteration]['Best IOU'] for iteration in iterations]
-    avg_precision = [avg_metrics_per_iteration[iteration]['Precision'] for iteration in iterations]
-    avg_recall = [avg_metrics_per_iteration[iteration]['Recall'] for iteration in iterations]
+    # Compute average metrics for each agent count
+    avg_metrics_per_agent = {
+        num_agent: {
+            'Precision': sum(metrics_per_agent[num_agent]['Precision']) / len(metrics_per_agent[num_agent]['Precision']),
+            'Recall': sum(metrics_per_agent[num_agent]['Recall']) / len(metrics_per_agent[num_agent]['Recall']),
+            'All IOU': sum(metrics_per_agent[num_agent]['All IOU']) / len(metrics_per_agent[num_agent]['All IOU']),
+            'Best IOU': sum(metrics_per_agent[num_agent]['Best IOU']) / len(metrics_per_agent[num_agent]['Best IOU'])
+        }
+        for num_agent in metrics_per_agent
+    }
 
-    # Plot Average IoU, Precision, Recall, and Best IoU
-    plt.plot(iterations, avg_iou, marker='o', linestyle='-', color='b', label='Average All IoU')
-    plt.plot(iterations, avg_best_iou, marker='o', linestyle='-', color='c', label='Average Best IoU')
-    plt.plot(iterations, avg_precision, marker='o', linestyle='-', color='g', label='Average Precision')
-    plt.plot(iterations, avg_recall, marker='o', linestyle='-', color='r', label='Average Recall')
+    # Plot the metrics over different agent counts
+    plot_metrics_vs_agents(avg_metrics_per_agent)
 
-    # Set labels and title
-    plt.xlabel('Iteration')
-    plt.ylabel('Metric Value')
-    plt.title('Average IoU, Precision, Recall, and Best IoU Over Iterations')
-    plt.legend(loc='best')
-    plt.xticks(iterations)
-    plt.grid(True)
-    plt.show()
+    # Save the combined DataFrame to a CSV file
+    #all_logs_df = pd.DataFrame(all_logs)
+    #all_logs_df.to_csv("results/feedback_debate_test_2.csv", index=False)
 
-def plot_iou_changes(metrics_over_iterations):
-    """Plot the number of rows with IoU increases and decreases across iterations."""
+def plot_metrics_vs_agents(avg_metrics_per_agent):
+    """Plot Precision, Recall, All IOU, and Best IOU vs. Number of Agents."""
 
-    # Define the iterations we have data for
-    iterations = range(1, max(next(iter(metrics_over_iterations.values())).keys()) + 1)
+    agents = list(avg_metrics_per_agent.keys())
+    precision = [avg_metrics_per_agent[agent]['Precision'] for agent in agents]
+    recall = [avg_metrics_per_agent[agent]['Recall'] for agent in agents]
+    all_iou = [avg_metrics_per_agent[agent]['All IOU'] for agent in agents]
+    best_iou = [avg_metrics_per_agent[agent]['Best IOU'] for agent in agents]
 
-    # Count the number of rows with IoU improvements and decreases for each iteration
-    improvements = [sum(metrics_over_iterations[row][i]['IoU Improvement'] for row in metrics_over_iterations) for i in iterations]
-    decreases = [sum(metrics_over_iterations[row][i]['IoU Decrease'] for row in metrics_over_iterations) for i in iterations]
-
-    # Plotting the data
     plt.figure(figsize=(10, 6))
-    bar_width = 0.35
-    plt.bar([i - bar_width / 2 for i in iterations], improvements, width=bar_width, label='IoU Increase', color='green', align='center')
-    plt.bar([i + bar_width / 2 for i in iterations], decreases, width=bar_width, label='IoU Decrease', color='red', align='center')
+    plt.plot(agents, precision, marker='o', linestyle='-', color='b', label='Precision')
+    plt.plot(agents, recall, marker='o', linestyle='-', color='g', label='Recall')
+    plt.plot(agents, all_iou, marker='o', linestyle='-', color='r', label='All IOU')
+    plt.plot(agents, best_iou, marker='o', linestyle='-', color='c', label='Best IOU')
 
-    # Setting labels and title
-    plt.xlabel('Iteration')
-    plt.ylabel('Number of Rows')
-    plt.title('Number of Rows with IoU Increase and Decrease Across Iterations')
-    plt.xticks(iterations)
-    plt.legend()
+    plt.xlabel('Number of Agents')
+    plt.ylabel('Percentage')
+    plt.title('Metrics vs. Number of Agents')
+    plt.legend(loc='best')
+    plt.xticks(agents)
     plt.grid(True)
     plt.show()
-    
+
 if __name__ == '__main__':
     main()

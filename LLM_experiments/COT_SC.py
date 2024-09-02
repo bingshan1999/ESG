@@ -16,16 +16,6 @@ import utils
 
 random.seed(42)
 
-system_context = """
-You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
-Given an article, you will be asked to extract ESG issues from it. 
-Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
-
-- Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production, HPC.
-- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection (Hacks), Entry Barrier and Accessibility (Global Reach, User Adoptions, Investment), Market Instability (Price Drops and Increases), Illicit Activities, Large Financial Institutions and Crypto Institution
-- Governance (G): Decentralized Governance Models (Off-chain and On-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
-"""
-
 def create_prompt(title, content):
     return f"""
                 Article Title: {title}
@@ -62,7 +52,6 @@ def generate_multiple_reasoning_paths(model, prompt, num_paths=3):
 def extract_and_intersect_combined(output_texts):
     combined_sets = set()
     for sent in output_texts:
-        print(f'sent: {sent}')
         all_sentences = utils.parse_esg_json(sent)
         # Process sentences: Upper-case the first letter and add to the set
         processed_sentences = {sentence.capitalize() for sentence in all_sentences}
@@ -71,7 +60,7 @@ def extract_and_intersect_combined(output_texts):
     return list(combined_sets)
 
 def main():
-    model = GPT(system_context=system_context)
+    model = GPT(system_context=utils.system_context)
     # Load your data using pandas
     file_path = '../data/cleaned_coindesk_btc.csv'
     df = pd.read_csv(file_path)

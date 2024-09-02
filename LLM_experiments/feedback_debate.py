@@ -17,15 +17,6 @@ from collections import defaultdict
 import utils
 
 random.seed(42)
-system_context = """
-You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
-Given an article, you will be asked to extract ESG issues from it. 
-Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
-
-- Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production, HPC.
-- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection (Hacks), Entry Barrier and Accessibility (Global Reach, User Adoptions, Investment), Market Instability (Price Drops and Increases), Illicit Activities, Large Financial Institutions and Crypto Institution
-- Governance (G): Decentralized Governance Models (Off-chain and On-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
-"""
 
 def generate_initial_responses(model, num_agents, title, content):
     extracted_sentences = set()
@@ -33,24 +24,24 @@ def generate_initial_responses(model, num_agents, title, content):
                     Article Title: {title}
                     Article Context: {content}
 
-                    Task:
+                    Task: 
                     Let's think step by step.
                     Step 1: Identify and explain any Environmental (E) aspects mentioned in the article.
                     Environmental Aspects:
 
-                    Step 2: Based on Step 1, extract the original sentences from the article that relates to the Environmental Aspects. Return the sentences in a JSON array.
+                    Step 2: Based on Step 1, extract the original sentences from the article that relate to the Environmental Aspects. Return the sentences in a JSON array.
                     Environmental Array:
 
-                    Step 3: Identify and explain any Social (S) aspects mentioned in the article. 
+                    Step 3: Identify and explain any Social (S) aspects mentioned in the article.
                     Social Aspects:
 
-                    Step 4: Based on Step 3, extract the original sentences from the article that relates to the Social Aspects. Return the sentences in a JSON array.
+                    Step 4: Based on Step 3, extract the original sentences from the article that relate to the Social Aspects. Return the sentences in a JSON array.
                     Social Array:
-                    
+
                     Step 5: Identify and explain any Governance (G) aspects mentioned in the article.
                     Governance Aspects:
 
-                    Step 6: Based on Step 5, extract the original sentences from the article that relates to the Governance Aspects. Return the sentences in a JSON array.
+                    Step 6: Based on Step 5, extract the original sentences from the article that relate to the Governance Aspects. Return the sentences in a JSON array.
                     Governance Array:
                 """
     for _ in range(num_agents):
@@ -247,12 +238,10 @@ def filter_content(content, previous_sentences, iou_threshold=0.5):
     return filtered_content
 
 def main():
-    response_model = GPT(system_context=system_context)
-    critique_model = GPT(system_context=system_context)
-    refinement_model = GPT(system_context=system_context)
+    model = GPT(system_context=utils.system_context)
     num_agents_initial = 3
     num_agents_critique = 3
-    num_iterations = 4
+    num_iterations = 5
 
     # Load your data using pandas
     file_path = '../data/cleaned_coindesk_btc.csv'
@@ -261,11 +250,11 @@ def main():
     ground_truth = read_ground_truth_from_csv(ground_truth_path)
     all_logs = []
     rows_indices = [i for i in range(0, 22) if i not in [6, 14]]  # Exclude specific articles
-    rows_indices = [0,1]
+    #rows_indices = [0,1]
 
     # Initialize a nested dictionary to store metrics for each row and iteration
-    metrics_over_iterations = {index: {iteration: {'Precision': 0, 'Recall': 0, 'All IOU': 0, 'Best IOU': 0, 'IoU Improvement': 0, 'IoU Decrease': 0}
-                                       for iteration in range(0, num_iterations + 1)}
+    metrics_over_iterations = {index: {iteration: {'TP': 0, 'FP': 0, 'FN': 0, 'All IoU': 0, 'Best IoU': 0, 'IoU Improvement': 0, 'IoU Decrease': 0}
+                                       for iteration in range(1, num_iterations + 1)}
                                for index in rows_indices}
 
     for index in rows_indices:
@@ -274,22 +263,22 @@ def main():
         print(results)
 
         ######################### First iteration
-        extracted_sentences = generate_initial_responses(response_model, num_agents_initial, row['title'], row['content'])
-        critiques = critique_responses(critique_model, num_agents_critique, row['title'], row['content'], extracted_sentences)   
-        matches, refined_sentences = refine_responses(refinement_model, num_agents_critique, row['title'], row['content'], extracted_sentences, critiques)
+        extracted_sentences = generate_initial_responses(model, num_agents_initial, row['title'], row['content'])
+        critiques = critique_responses(model, num_agents_critique, row['title'], row['content'], extracted_sentences)   
+        matches, refined_sentences = refine_responses(model, num_agents_critique, row['title'], row['content'], extracted_sentences, critiques)
 
         # Calculate metrics for the first iteration
         tp, fp, fn, all_iou, best_iou = utils.evaluate_extracted_sentences(refined_sentences, ground_truth[index + 1])
         print(f'tp: {tp}, fp: {fp}, fn: {fn}, all_iou: {all_iou:.4f}, best_iou:{best_iou:.4f}')
-        precision = tp / (tp + fp) if (tp + fp) > 0 else 0
-        recall = tp / (tp + fn) if (tp + fn) > 0 else 0
+
 
         # Store the metrics
         metrics_over_iterations[index][0] = {
-            'Precision': precision,
-            'Recall': recall,
-            'All IOU': all_iou,
-            'Best IOU': best_iou,
+            'TP': tp,
+            'FP': fp,
+            'FN': fn,
+            'All IoU': all_iou,
+            'Best IoU': best_iou,
             'IoU Improvement': 0,
             'IoU Decrease': 0
         }
@@ -307,6 +296,8 @@ def main():
         results['TP'] = tp 
         results['FP'] = fn 
         results['FN'] = fn
+        results['All IoU'] = all_iou 
+        results['Best IoU'] = best_iou
 
         ############################ NEXT ITERATIONS
         for iteration in range(1, num_iterations + 1):
@@ -314,36 +305,25 @@ def main():
             new_article = filter_content(row['content'], refined_sentences)
             #print(f'NEW ARTICLE: {new_article}')
             
-            new_extracted_sentences = generate_initial_responses(response_model, num_agents_initial, row['title'], new_article) 
-            new_critiques = critique_responses(critique_model, num_agents_critique, row['title'], row['content'], new_extracted_sentences) # pass the original article for full context
-            matches, new_refined_sentences = refine_responses(refinement_model, num_agents_critique, row['title'], row['content'], new_extracted_sentences, new_critiques)
+            new_extracted_sentences = generate_initial_responses(model, num_agents_initial, row['title'], new_article) 
+            new_critiques = critique_responses(model, num_agents_critique, row['title'], row['content'], new_extracted_sentences) # pass the original article for full context
+            matches, new_refined_sentences = refine_responses(model, num_agents_critique, row['title'], row['content'], new_extracted_sentences, new_critiques)
             
             final_ans = refined_sentences + new_refined_sentences
 
             new_tp, new_fp, new_fn, new_all_iou, new_best_iou = utils.evaluate_extracted_sentences(final_ans, ground_truth[index + 1])
-            new_precision = new_tp / (new_tp + new_fp) if (new_tp + new_fp) > 0 else 0
-            new_recall = new_tp / (new_tp + new_fn) if (new_tp + new_fn) > 0 else 0
             print(f'tp: {tp}, fp: {fp}, fn: {fn}, all_iou: {all_iou:.4f}, best_iou:{best_iou:.4f}')
 
-            # Calculate IoU improvement or decrease
-            iou_improvement = new_all_iou - metrics_over_iterations[index][iteration - 1]['All IOU']
-            iou_decrease = 0
-            
-            if iou_improvement > 0:
-                metrics_over_iterations[index][iteration]['IoU Improvement'] = 1
-            elif iou_improvement < 0:
-                metrics_over_iterations[index][iteration]['IoU Decrease'] = 1
-                iou_decrease = 1
-
+            iou_improvement = new_all_iou - metrics_over_iterations[index][iteration - 1]['All IoU']
+ 
             # Store the metrics for the current iteration
-            metrics_over_iterations[index][iteration] = {
-                'Precision': new_precision,
-                'Recall': new_recall,
-                'All IOU': new_all_iou,
-                'Best IOU': new_best_iou,
-                'IoU Improvement': 1 if iou_improvement > 0 else 0,
-                'IoU Decrease': iou_decrease
-            }
+            metrics_over_iterations[index][iteration]['TP'] = new_tp
+            metrics_over_iterations[index][iteration]['FP'] = new_fp
+            metrics_over_iterations[index][iteration]['FN'] = new_fn
+            metrics_over_iterations[index][iteration]['All IoU'] = new_all_iou
+            metrics_over_iterations[index][iteration]['Best IoU'] = new_best_iou
+            metrics_over_iterations[index][iteration]['IoU Improvement'] = 1 if iou_improvement > 0 else 0
+            metrics_over_iterations[index][iteration]['IoU Decrease'] = 1 if iou_improvement < 0 else 0
 
             # Store the extracted sentences, critiques, and refined sentences
             results[f'Iteration {iteration} Extracted Sentences'] = "\n".join(new_extracted_sentences)
@@ -353,10 +333,12 @@ def main():
                 for i, critique in enumerate(agent_critiques):
                     critiques_str += f"  Agent {i+1}:\n    " + "\n    ".join(critique.splitlines()) + "\n"
             results[f'Iteration {iteration} Critiques'] = critiques_str
-            results[f'Iteration {iteration} Refined Sentences'] = "\n".join(new_refined_sentences)
-            results[f'Iteration {iteration} TP'] = tp 
-            results[f'Iteration {iteration} FP'] = fn 
-            results[f'Iteration {iteration} FN'] = fn
+            results[f'Iteration {iteration} New Sentences'] = "\n".join(final_ans)
+            results[f'Iteration {iteration} TP'] = new_tp 
+            results[f'Iteration {iteration} FP'] = new_fp 
+            results[f'Iteration {iteration} FN'] = new_fn 
+            results[f'Iteration {iteration} All IoU'] = new_all_iou
+            results[f'Iteration {iteration} Best IoU'] = new_best_iou
             print(f'{len(new_refined_sentences)} Additions with {iou_improvement:.4f} IOU changes')
             refined_sentences = final_ans
         
@@ -364,47 +346,53 @@ def main():
         
      # Save the combined DataFrame to a CSV file
     all_logs_df = pd.DataFrame(all_logs)
-    all_logs_df.to_csv("results/feedback_debate_test_2.csv", index=False)
-    # Calculate the average metrics over all rows for each iteration
-    avg_metrics_per_iteration = {iteration: {'Precision': 0, 'Recall': 0, 'All IOU': 0, 'Best IOU': 0} for iteration in range(0, num_iterations + 1)}
-
-    for iteration in range(0, num_iterations + 1):
-        precision_sum = recall_sum = all_iou_sum = best_iou_sum = 0
-        for index in rows_indices:
-            precision_sum += metrics_over_iterations[index][iteration]['Precision']
-            recall_sum += metrics_over_iterations[index][iteration]['Recall']
-            all_iou_sum += metrics_over_iterations[index][iteration]['All IOU']
-            best_iou_sum += metrics_over_iterations[index][iteration]['Best IOU']
-        
-        avg_metrics_per_iteration[iteration]['Precision'] = precision_sum / len(rows_indices)
-        avg_metrics_per_iteration[iteration]['Recall'] = recall_sum / len(rows_indices)
-        avg_metrics_per_iteration[iteration]['All IOU'] = all_iou_sum / len(rows_indices)
-        avg_metrics_per_iteration[iteration]['Best IOU'] = best_iou_sum / len(rows_indices)
-
+    all_logs_df.to_csv("results/feedback_debate_test_COT.csv", index=False)
+    #print(metrics_over_iterations)
     # Plot metrics
-    print(metrics_over_iterations)
-    plot_metrics_over_iterations(avg_metrics_per_iteration)
+    plot_metrics_over_iterations(metrics_over_iterations)
     plot_iou_changes(metrics_over_iterations)
 
-def plot_metrics_over_iterations(avg_metrics_per_iteration):
+def plot_metrics_over_iterations(metrics_over_iterations):
     """Plot Average IoU, Precision, Recall, and Best IoU over iterations."""
-    
+
     plt.figure(figsize=(12, 8))
 
     # Determine the number of iterations
-    iterations = list(avg_metrics_per_iteration.keys())
+    iterations = range(1, max(next(iter(metrics_over_iterations.values())).keys()) + 1)  # Correctly determine the range of iterations
 
-    # Extract each metric
-    avg_iou = [avg_metrics_per_iteration[iteration]['All IOU'] for iteration in iterations]
-    avg_best_iou = [avg_metrics_per_iteration[iteration]['Best IOU'] for iteration in iterations]
-    avg_precision = [avg_metrics_per_iteration[iteration]['Precision'] for iteration in iterations]
-    avg_recall = [avg_metrics_per_iteration[iteration]['Recall'] for iteration in iterations]
+    avg_iou_arr = []
+    avg_best_iou_arr = []
+    precisions = []
+    recalls = []
+
+    for iteration in iterations:
+        total_tp = total_fp = total_fn = 0
+        all_iou_sum = best_iou_sum = 0
+        num_rows = len(metrics_over_iterations)  # The number of rows being processed
+
+        for index in metrics_over_iterations:
+            total_tp += metrics_over_iterations[index][iteration]['TP']
+            total_fp += metrics_over_iterations[index][iteration]['FP']
+            total_fn += metrics_over_iterations[index][iteration]['FN']
+            all_iou_sum += metrics_over_iterations[index][iteration]['All IoU']
+            best_iou_sum += metrics_over_iterations[index][iteration]['Best IoU']
+
+        # Calculate average precision, recall, All IOU, and Best IOU
+        precision_value = total_tp / (total_tp + total_fp) if (total_tp + total_fp) > 0 else 0
+        recall_value = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 0
+        avg_all_iou = all_iou_sum / num_rows
+        avg_best_iou = best_iou_sum / num_rows
+
+        precisions.append(precision_value)
+        recalls.append(recall_value)
+        avg_iou_arr.append(avg_all_iou)
+        avg_best_iou_arr.append(avg_best_iou)
 
     # Plot Average IoU, Precision, Recall, and Best IoU
-    plt.plot(iterations, avg_iou, marker='o', linestyle='-', color='b', label='Average All IoU')
-    plt.plot(iterations, avg_best_iou, marker='o', linestyle='-', color='c', label='Average Best IoU')
-    plt.plot(iterations, avg_precision, marker='o', linestyle='-', color='g', label='Average Precision')
-    plt.plot(iterations, avg_recall, marker='o', linestyle='-', color='r', label='Average Recall')
+    plt.plot(iterations, avg_iou_arr, marker='o', linestyle='-', color='b', label='Average All IoU')
+    plt.plot(iterations, avg_best_iou_arr, marker='o', linestyle='-', color='c', label='Average Best IoU')
+    plt.plot(iterations, precisions, marker='o', linestyle='-', color='g', label='Average Precision')
+    plt.plot(iterations, recalls, marker='o', linestyle='-', color='r', label='Average Recall')
 
     # Set labels and title
     plt.xlabel('Iteration')

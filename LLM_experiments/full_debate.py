@@ -14,37 +14,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from GPT import GPT
 from collections import defaultdict
 import utils
+import random
 
-system_context = """
-You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
-Given an article, you will be asked to extract ESG issues from it. 
-Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
 
-- Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production, HPC.
-- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection (Hacks), Entry Barrier and Accessibility (Global Reach, User Adoptions, Investment), Market Instability (Price Drops and Increases), Illicit Activities, Large Financial Institutions and Crypto Institution
-- Governance (G): Decentralized Governance Models (Off-chain and On-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
-"""
-
-critique_context = """
-You are critical reviewer with deep expertise in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
-Given a list of ESG related sentences, you should evaluate each of the provided sentences, justifying if they are relevant to ESG concerns.
-Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
-
-- Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production.
-- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection, Entry Barrier and Accessibility, Market Instability, Illicit Activities, Influence of Large Financial Institutions and Crypto Institution
-- Governance (G): Decentralized Governance Models (off-chain and on-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
-"""
-
-refinement_context = """
-You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
-Your task is to review a list of ESG-related sentences along with their respective critiques. Based on the critiques, decide whether each sentence should be eliminated from the list.
-Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
-
-- Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production.
-- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection, Entry Barrier and Accessibility, Market Instability, Illicit Activities, Influence of Large Financial Institutions and Crypto Institution
-- Governance (G): Decentralized Governance Models (off-chain and on-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
-"""
-
+random.seed(42)
 def generate_initial_responses(model, num_agents, title, content):
     extracted_sentences = set()
     initial_prompt = f"""
@@ -72,10 +45,9 @@ def generate_initial_responses(model, num_agents, title, content):
                     Governance Array:
                 """
     for _ in range(num_agents):
-        response = model.extract_esg_sentence(initial_prompt, temperature=0.7, verbose=False)
+        response = model.extract_esg_sentence(initial_prompt, temperature=random.random(), verbose=False)
         
-        E, S, G = utils.parse_esg_json(response)
-        all_sentences = E + S + G  # Merge all sentences into one list
+        all_sentences = utils.parse_esg_json(response)
         
         # Process sentences: Upper-case the first letter and add to the set
         processed_sentences = {sentence.capitalize() for sentence in all_sentences}
@@ -86,9 +58,9 @@ def generate_initial_responses(model, num_agents, title, content):
 
 def critique_responses(model, num_agents, title, content, sentences):
     tasks = [
-        "Given the article context and extracted ESG-relevant sentences, go through each sentence and critique their relevancy.",
-        "Given the article context and extracted ESG-relevant sentences, evaluate each sentence for completeness. Does the sentence capture the full scope of the ESG issue, or is it missing key details?",
-        "Given the article context and extracted ESG-relevant sentences, analyze if there are underlying implications or connections that may not be immediately obvious but could be relevant upon closer examination."
+        "Given the article context and extracted ESG-relevant sentences, go through each sentence and critique their relevancy according to the key themes.",
+        "Given the article context and extracted ESG-relevant sentences, evaluate if the sentence capture the full scope of the ESG issue, or is it missing key details?",
+        "Given the article context and extracted ESG-relevant sentences, analyze if there are underlying implications or connections to the key themes that may not be immediately obvious but could be relevant upon closer examination."
     ]
     
     critiques = {}
@@ -101,6 +73,10 @@ def critique_responses(model, num_agents, title, content, sentences):
                             Article Title: {title}
                             Article Context: {content}
                             Extracted ESG Sentences: {sentences}
+                            Key themes: 
+                            - Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production, HPC.
+                            - Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection (Hacks), Entry Barrier and Accessibility (Global Reach, User Adoptions, Investment), Market Instability (Price Drops and Increases), Illicit Activities, Large Financial Institutions and Crypto Institution
+                            - Governance (G): Decentralized Governance Models (Off-chain and On-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
                             
                             Task: {task}
                             """
@@ -111,9 +87,9 @@ def critique_responses(model, num_agents, title, content, sentences):
                             Critique:
                             """
         
-        critique = model.extract_esg_sentence(critique_prompt, temperature=0.7, top_p=0.4, verbose=False)
-        critique_list = re.findall(r'Critique:\s*(.*?)\s*(?=(Sentence \d+:|$))', critique, re.DOTALL)
-        
+        critique = model.extract_esg_sentence(critique_prompt, temperature=random.random(), top_p=0.4, verbose=False)
+        critique_list = re.findall(r'Critique:\s*(.*?)(?=\s*Sentence \d+:|$)', critique, re.DOTALL)
+        #print(f'critique_list: {critique_list}')
         # Store each critique in the dictionary with the sentence_index as the key
         for sentence_index, critique_text in enumerate(critique_list, 1):
             # Initialize the list if it's the first time this key is being used
@@ -123,12 +99,10 @@ def critique_responses(model, num_agents, title, content, sentences):
             # Append the critique to the list for this key
             critiques[sentence_index].append(critique_text.strip())
 
-    print(f'Critiques: {critiques} \n\n')
+    #print(f'Critiques: {critiques} \n\n')
     return critiques
 
-
 def refine_responses(model, num_agents, title, content, sentences, critiques):
-
     refinement_prompt = f"""
                         Article Title: {title}
                         Article Context: {content}
@@ -156,8 +130,8 @@ def refine_responses(model, num_agents, title, content, sentences, critiques):
     decision_counts = defaultdict(int)
     decision_matches = []
     for i in range(num_agents):
-        refined_response = model.extract_esg_sentence(refinement_prompt, temperature=0.7, verbose=False)
-        print(refined_response)
+        refined_response = model.extract_esg_sentence(refinement_prompt, temperature=random.random(), verbose=False)
+        #print(refined_response)
         # First regex pattern to match the default format
         default_decision_pattern = r"\**Decision\**:\s*\**\s*(Include|Exclude)\**"
 
@@ -173,7 +147,7 @@ def refine_responses(model, num_agents, title, content, sentences, critiques):
         
         decision_matches.append(matches)
         
-        print(f'DECISION: {matches}')
+        #print(f'DECISION: {matches}')
         # Increment or decrement the count based on the decision
         for idx, decision in enumerate(matches):
             if decision == "Include":
@@ -190,16 +164,18 @@ def refine_responses(model, num_agents, title, content, sentences, critiques):
     return decision_matches, sentences
 
 def main():
-    response_model = GPT(system_context=system_context)
-    critique_model = GPT(system_context=system_context)
-    refinement_model = GPT(system_context=system_context)
+    model = GPT(system_context=utils.system_context)
+
     num_agents = 3
     
     # Load your data using pandas
     file_path = '../data/cleaned_coindesk_btc.csv'
     df = pd.read_csv(file_path)
+    ground_truth_path = '../data/ground_truth.csv'
+    ground_truth = utils.read_ground_truth_from_csv(ground_truth_path)
 
-    rows_indices = range(0,21)
+    rows_indices = [i for i in range(0, 22) if i not in [6, 14]]
+    
 
     # Initialize a DataFrame to store the sentences and their corresponding ESG-related sentences for all indices
     all_logs = []
@@ -211,16 +187,19 @@ def main():
         print(results)
 
         print("Initial Response Round \n")
-        extracted_sentences = generate_initial_responses(response_model, num_agents, row['title'], row['content'])
+        extracted_sentences = generate_initial_responses(model, num_agents, row['title'], row['content'])
         
         # Generate critiques
         print("\nCritique Round \n")
-        critiques = critique_responses(critique_model, num_agents, row['title'], row['content'], extracted_sentences)
+        critiques = critique_responses(model, num_agents, row['title'], row['content'], extracted_sentences)
         
         # Refine responses based on critiques
         print("\nRefined Responses\n")
-        matches, refined_sentences = refine_responses(refinement_model, num_agents, row['title'], row['content'], extracted_sentences, critiques)
-
+        matches, refined_sentences = refine_responses(model, num_agents, row['title'], row['content'], extracted_sentences, critiques)
+        
+        tp, fp, fn, all_iou, best_iou = utils.evaluate_extracted_sentences(refined_sentences, ground_truth[index + 1])
+        print(f'tp: {tp}, fp: {fp}, fn: {fn}, all_iou: {all_iou:.4f}, best_iou: {best_iou:.4f}')
+        
         # Store the extracted sentences, critiques, and refined sentences
         results['Extracted Sentences'] = "\n".join(extracted_sentences)
         critiques_str = ""
@@ -237,6 +216,11 @@ def main():
         removed_sentences = initial_set - refined_set
         number_of_removals = len(removed_sentences)
         results['Number of Removals'] = number_of_removals
+        results['TP'] = tp 
+        results['FP'] = fp
+        results['FN'] = fn 
+        results['All IoU'] = all_iou
+        results['Best IoU'] = best_iou
         
         all_logs.append(results)
         

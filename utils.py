@@ -8,6 +8,15 @@ import pandas as pd
 # Load pre-trained sentence transformer model
 model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 #model = SentenceTransformer('distilbert-base-nli-stsb-mean-tokens')
+system_context = """
+You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
+Given an article, you will be asked to extract ESG issues from it. 
+Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
+
+- Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production, HPC.
+- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection (Hacks), Entry Barrier and Accessibility (Global Reach, User Adoptions, Investment), Market Instability (Extreme Price Fluctuations), Illicit Activities, Influence of Large Financial Institutions or Crypto Institution
+- Governance (G): Decentralized Governance Models (Off-chain and On-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
+"""
 
 def encode_arr(sentences_arr):
     """

@@ -17,15 +17,6 @@ from collections import defaultdict
 import utils
 
 random.seed(42)
-system_context = """
-You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
-Given an article, you will be asked to extract ESG issues from it. 
-Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
-
-- Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production, HPC.
-- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection (Hacks), Entry Barrier and Accessibility (Global Reach, User Adoptions, Investment), Market Instability (Price Drops and Increases), Illicit Activities, Large Financial Institutions and Crypto Institution
-- Governance (G): Decentralized Governance Models (Off-chain and On-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
-"""
 
 def generate_initial_responses(model, num_agents, title, content):
     extracted_sentences = set()
@@ -242,9 +233,9 @@ def filter_content(content, previous_sentences, iou_threshold=0.5):
     return filtered_content
 
 def main():
-    model = GPT(system_context=system_context)
+    model = GPT(system_context=utils.system_context)
     #num_iterations = 3
-    num_agents = range(3,7)
+    num_agents = range(3,10)
     num_criqitues = 3
     # Load your data using pandas
     file_path = '../data/cleaned_coindesk_btc.csv'
@@ -256,7 +247,7 @@ def main():
     #rows_indices = [0]  # For testing with a single row
 
     # Store metrics for different agent counts
-    metrics_per_agent = {num_agent: {'Precision': [], 'Recall': [], 'All IOU': [], 'Best IOU': []} for num_agent in num_agents}
+    metrics_per_agent = {num_agent: {'TP': 0, 'FP': 0, 'FN': 0, 'All IOU': [], 'Best IOU': []} for num_agent in num_agents}
 
     for num_agent in num_agents:
         for index in rows_indices:
@@ -272,41 +263,47 @@ def main():
             # Calculate metrics for the first iteration
             tp, fp, fn, all_iou, best_iou = utils.evaluate_extracted_sentences(refined_sentences, ground_truth[index + 1])
             print(f'Number of agent: {num_agent}, tp: {tp}, fp: {fp}, fn: {fn}, all_iou: {all_iou:.4f}, best_iou: {best_iou:.4f}')
-            precision = tp / (tp + fp) if (tp + fp) > 0 else 0
-            recall = tp / (tp + fn) if (tp + fn) > 0 else 0
 
             # Store metrics for this agent count
-            metrics_per_agent[num_agent]['Precision'].append(precision)
-            metrics_per_agent[num_agent]['Recall'].append(recall)
+            metrics_per_agent[num_agent]['TP'] += tp
+            metrics_per_agent[num_agent]['FP'] += fp
+            metrics_per_agent[num_agent]['FN'] += fn
             metrics_per_agent[num_agent]['All IOU'].append(all_iou)
             metrics_per_agent[num_agent]['Best IOU'].append(best_iou)
 
-    # Compute average metrics for each agent count
-    avg_metrics_per_agent = {
-        num_agent: {
-            'Precision': sum(metrics_per_agent[num_agent]['Precision']) / len(metrics_per_agent[num_agent]['Precision']),
-            'Recall': sum(metrics_per_agent[num_agent]['Recall']) / len(metrics_per_agent[num_agent]['Recall']),
-            'All IOU': sum(metrics_per_agent[num_agent]['All IOU']) / len(metrics_per_agent[num_agent]['All IOU']),
-            'Best IOU': sum(metrics_per_agent[num_agent]['Best IOU']) / len(metrics_per_agent[num_agent]['Best IOU'])
-        }
-        for num_agent in metrics_per_agent
-    }
-
     # Plot the metrics over different agent counts
-    plot_metrics_vs_agents(avg_metrics_per_agent)
+    plot_metrics_vs_agents(metrics_per_agent)
 
     # Save the combined DataFrame to a CSV file
     #all_logs_df = pd.DataFrame(all_logs)
     #all_logs_df.to_csv("results/feedback_debate_test_2.csv", index=False)
 
-def plot_metrics_vs_agents(avg_metrics_per_agent):
+def plot_metrics_vs_agents(metrics_per_agent):
     """Plot Precision, Recall, All IOU, and Best IOU vs. Number of Agents."""
+    agents = list(metrics_per_agent.keys())
 
-    agents = list(avg_metrics_per_agent.keys())
-    precision = [avg_metrics_per_agent[agent]['Precision'] for agent in agents]
-    recall = [avg_metrics_per_agent[agent]['Recall'] for agent in agents]
-    all_iou = [avg_metrics_per_agent[agent]['All IOU'] for agent in agents]
-    best_iou = [avg_metrics_per_agent[agent]['Best IOU'] for agent in agents]
+    # Calculate precision, recall, and average IOU metrics
+    precision = []
+    recall = []
+    all_iou = []
+    best_iou = []
+
+    for agent in agents:
+        tp = metrics_per_agent[agent]['TP']
+        fp = metrics_per_agent[agent]['FP']
+        fn = metrics_per_agent[agent]['FN']
+        
+        # Calculate precision and recall
+        precision_value = tp / (tp + fp) if (tp + fp) > 0 else 0
+        recall_value = tp / (tp + fn) if (tp + fn) > 0 else 0
+        precision.append(precision_value)
+        recall.append(recall_value)
+
+        # Calculate average All IOU and Best IOU
+        avg_all_iou = sum(metrics_per_agent[agent]['All IOU']) / len(metrics_per_agent[agent]['All IOU']) if metrics_per_agent[agent]['All IOU'] else 0
+        avg_best_iou = sum(metrics_per_agent[agent]['Best IOU']) / len(metrics_per_agent[agent]['Best IOU']) if metrics_per_agent[agent]['Best IOU'] else 0
+        all_iou.append(avg_all_iou)
+        best_iou.append(avg_best_iou)
 
     plt.figure(figsize=(10, 6))
     plt.plot(agents, precision, marker='o', linestyle='-', color='b', label='Precision')
@@ -315,7 +312,7 @@ def plot_metrics_vs_agents(avg_metrics_per_agent):
     plt.plot(agents, best_iou, marker='o', linestyle='-', color='c', label='Best IOU')
 
     plt.xlabel('Number of Agents')
-    plt.ylabel('Percentage')
+    plt.ylabel('Metric Value')
     plt.title('Metrics vs. Number of Agents')
     plt.legend(loc='best')
     plt.xticks(agents)

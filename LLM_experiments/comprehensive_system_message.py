@@ -14,42 +14,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from GPT import GPT
 import utils
 
-# system_context = """
-# You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
-# Given an article, you will be asked to extract ESG issues from it. 
-# Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
-
-# - Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production, HPC.
-# - Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection (Hacks), Entry Barrier and Accessibility (Global Reach, User Adoptions, Investment), Market Instability (Price Drops and Increases), Illicit Activities, Large Financial Institutions and Crypto Institution
-# - Governance (G): Decentralized Governance Models (Off-chain and On-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
-# """
-
-system_context = """
-You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
-Given an article, you will be asked to extract ESG issues from it. 
-Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
-
-- Environmental (E): Energy Consumption, Carbon Emissions, Resource Management, Renewable Energy Usage, Electronic Waste Production.
-- Social (S): Labor Practice, Community Engagement and Inclusion, Security and User Protection, Entry Barrier and Accessibility, Market Instability, Illicit Activities, Influence of Large Financial Institutions and Crypto Institution
-- Governance (G): Decentralized Governance Models (off-chain and on-chain), Business Ethics and Transparency, Regulatory Compliance, Executive Compensation and Incentives, Tax Evasion, Geographical Differences and Regulatory Challenges
-"""
-
-system_context_2 = """
-You are an expert in Environmental, Social, and Governance (ESG) topics, specifically within the cryptocurrency space. 
-Given an article, you will be asked to extract ESG issues from it. 
-Here are the key ESG issues that are particularly relevant in the context of cryptocurrencies:
-
-- Consensus Algorithm, particularly Proof of Work that are energy-intensive
-- E-waste caused by hardware updates, leading to short tech lifespans
-- Carbon footprint of energy sources used
-- On-chain governance and Off-chain governance structure
-- Regulation including taxation, legal authority
-- KYC/AML
-- Geographical differences that leads to financial inclusivity and regulations
-- Market Instability including huge drop in price, constituting risks to investor
-- Illicit activities for example fraud, corruption, financial crimes
-"""
-
 def generate_prompts(title, content, system_context=None):
     """Generate prompts based on the title and content, optionally including a system context."""
     
@@ -125,7 +89,7 @@ def read_ground_truth_from_csv(csv_file_path):
     return ground_truth_by_article
 
 def main():
-    model_system = GPT(system_context=system_context)
+    model_system = GPT(system_context=utils.system_context)
     model_non_system = GPT()
 
     # Load your data using pandas
@@ -154,7 +118,7 @@ def main():
         print(f'Processing Article {index}: {results["Title"]}')
 
         # Generate prompts for different experiments
-        prompts_system = generate_prompts(row['title'], row['content'], system_context)
+        prompts_system = generate_prompts(row['title'], row['content'], utils.system_context)
         prompts_non_system = generate_prompts(row['title'], row['content'])
 
         # System context experiment
